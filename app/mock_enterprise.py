@@ -308,8 +308,8 @@ async def oracle_netsuite_connection() -> Dict[str, Any]:
 # UNIVERSAL ENTERPRISE MOCK ROUTER (Workday, Power BI, Zendesk, ServiceNow,
 # Sage, NetSuite, Datadog, Substrate, New Relic, Soluble, SAP, Salesforce, etc.)
 # ----------------------------------------------------------------------
-@mock_router.get("/health")
-@mock_router.get("/api/health")
+@mock_router.api_route("/health", methods=["GET", "HEAD"])
+@mock_router.api_route("/api/health", methods=["GET", "HEAD"])
 def mock_gateway_health() -> Dict[str, Any]:
     return {
         "status": "healthy",

@@ -102,7 +102,8 @@ def on_startup() -> None:
     rag_engine.build_index()
 
 
-@app.get("/api/health")
+@app.api_route("/api/health", methods=["GET", "HEAD"])
+@app.api_route("/health", methods=["GET", "HEAD"])
 def get_health() -> Dict[str, Any]:
     conn = get_connection()
     cur = conn.cursor()
@@ -1431,7 +1432,7 @@ if os.path.isdir(FRONTEND_DIR):
     app.mount("/css", StaticFiles(directory=os.path.join(FRONTEND_DIR, "css")), name="css")
     app.mount("/js", StaticFiles(directory=os.path.join(FRONTEND_DIR, "js")), name="js")
 
-    @app.get("/")
+    @app.api_route("/", methods=["GET", "HEAD"])
     def serve_index() -> FileResponse:
         return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
