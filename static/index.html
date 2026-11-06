@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BurnIQ — Enterprise LLM Telemetry, Sage &amp; Oracle NetSuite ERP &amp; Workday Salary ROI</title>
+  <meta name="description" content="BurnIQ connects corporate Claude and Gemini token telemetry across GitHub, GitLab, Bitbucket, Jenkins, Bamboo, and Jira into Workday HCM compensation, Sage Intacct / Sage X3 General Ledger, Oracle NetSuite OneWorld SuiteQL, SAP, Salesforce, and Low-Value Task Auditing." />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-header">
+      <div class="brand-cluster">
+        <div class="brand-mark" aria-hidden="true">BQ</div>
+        <div class="brand-title-wrap">
+          <h1>BurnIQ Enterprise Telemetry &amp; ERP Financial Attribution</h1>
+          <div class="brand-subtitle">
+            Claude &amp; Gemini Token Burn &rarr; Git / CI-CD Releases &rarr; Jira &amp; Workday HCM &rarr; Sage Intacct &amp; Oracle NetSuite OneWorld GL
+          </div>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="erp-pill sage" id="header-sage-pill">
+          <span class="status-dot"></span>
+          Sage Intacct &amp; X3: CONNECTED
+        </span>
+        <span class="erp-pill netsuite" id="header-netsuite-pill">
+          <span class="status-dot"></span>
+          Oracle NetSuite OneWorld: CONNECTED
+        </span>
+        <button class="btn" id="btn-reset-demo" type="button">Reset Baseline Data</button>
+      </div>
+    </header>
+
+    <nav class="nav-bar" aria-label="Primary Platform Navigation">
+      <button class="nav-tab active" id="nav-tab-overview" data-target="panel-overview" type="button">
+        Executive &amp; Dual-ERP Overview
+      </button>
+      <button class="nav-tab" id="nav-tab-sage" data-target="panel-sage" type="button">
+        Sage Intacct &amp; Sage X3 ERP <span class="tab-count" id="badge-sage-count">3 Entities</span>
+      </button>
+      <button class="nav-tab" id="nav-tab-netsuite" data-target="panel-netsuite" type="button">
+        Oracle NetSuite OneWorld &amp; SuiteQL <span class="tab-count" id="badge-netsuite-count">4 Subs</span>
+      </button>
+      <button class="nav-tab" id="nav-tab-releases" data-target="panel-releases" type="button">
+        Code-to-Release &amp; Workday ROI
+      </button>
+      <button class="nav-tab" id="nav-tab-audit" data-target="panel-audit" type="button">
+        Low-Value Task Audit (Emails &amp; Notes)
+      </button>
+      <button class="nav-tab" id="nav-tab-connectors" data-target="panel-connectors" type="button">
+        Enterprise Connectors &amp; CSV <span class="tab-count" id="badge-connectors-count">16</span>
+      </button>
+    </nav>
+
+    <main class="main-container">
+      <!-- KPI Strip -->
+      <section class="kpi-grid" aria-label="Executive Financial and Telemetry KPIs">
+        <div class="kpi-card">
+          <div class="kpi-label">Total LLM Spend (MTD)</div>
+          <div class="kpi-value amber" id="kpi-total-spend">$67,410.50</div>
+          <div class="kpi-meta">Anthropic Claude + Vertex AI Gemini</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">ASC 350-40 Capitalized R&amp;D</div>
+          <div class="kpi-value emerald" id="kpi-capex-rd">$43,800.00</div>
+          <div class="kpi-meta">Sage GL 1650-01 &amp; NetSuite Acct 16500</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Workday Net Salary ROI</div>
+          <div class="kpi-value emerald" id="kpi-workday-roi">$329,500.00</div>
+          <div class="kpi-meta"><span id="kpi-hours-saved">714.0</span> Eng Hours Saved (4.89x Multiple)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Low-Value Email / Notes Waste</div>
+          <div class="kpi-value rose" id="kpi-low-value-waste">$9,190.00</div>
+          <div class="kpi-meta">Recoverable: <span id="kpi-recoverable-savings">$8,350.00</span>/mo via Haiku/Flash</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Salesforce ARR Attributed</div>
+          <div class="kpi-value sky" id="kpi-salesforce-arr">$3,460,000</div>
+          <div class="kpi-meta">Tied to 4 Shipped CI/CD Releases</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active ERP &amp; Enterprise Links</div>
+          <div class="kpi-value" id="kpi-connected-systems">16 / 16</div>
+          <div class="kpi-meta">Sage, NetSuite, SAP, Workday, Jira, CI/CD</div>
+        </div>
+      </section>
+
+      <!-- TAB 1: EXECUTIVE & DUAL-ERP OVERVIEW -->
+      <section class="tab-panel active" id="panel-overview">
+        <div class="grid-2col">
+          <!-- Sage Summary Card -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2>Sage Intacct &amp; Sage X3 Multi-Entity Ledger</h2>
+                <p>Real-time ASC 350-40 R&amp;D software capitalization, AP 3-way invoice match &amp; SG&amp;A waste isolation</p>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-sage" id="btn-goto-sage" type="button">Open Sage ERP Hub</button>
+                <a class="btn" id="link-export-sage-overview" href="/api/export/sage" download="burniq_sage_export.csv">Export Sage CSV</a>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Entity</th>
+                    <th>ERP Module</th>
+                    <th>Actual AI Spend</th>
+                    <th>CapEx (1650-01)</th>
+                    <th>Low-Value Waste</th>
+                    <th>Workday ROI</th>
+                  </tr>
+                </thead>
+                <tbody id="overview-sage-entities-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Oracle NetSuite Summary Card -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2>Oracle NetSuite OneWorld &amp; SuiteQL Consolidation</h2>
+                <p>Multi-subsidiary journal entries, LLM commit PO burn down &amp; 36-month CapEx amortization</p>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-netsuite" id="btn-goto-netsuite" type="button">Open NetSuite Hub</button>
+                <a class="btn" id="link-export-netsuite-overview" href="/api/export/netsuite" download="burniq_netsuite_export.csv">Export NetSuite CSV</a>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Subsidiary</th>
+                    <th>Currency</th>
+                    <th>LLM PO Commit</th>
+                    <th>MTD Token Burn</th>
+                    <th>CapEx Amortized</th>
+                    <th>EBITDA Lift</th>
+                  </tr>
+                </thead>
+                <tbody id="overview-netsuite-subs-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- End-to-End Code-to-ERP Attribution Table -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>End-to-End Code, CI/CD Release, Workday Salary &amp; Dual-ERP Attribution</h2>
+              <p>Traces every Claude &amp; Gemini token from GitHub / GitLab / Bitbucket commits and Jenkins / Bamboo builds to Sage GL &amp; Oracle NetSuite Journal Entries</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-overview-optimize-waste" type="button">
+                Auto-Route Low-Value Tasks &amp; Reconcile ERPs
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Release Tag</th>
+                  <th>SCM &amp; Branch</th>
+                  <th>CI/CD Build</th>
+                  <th>Jira &amp; ServiceNow</th>
+                  <th>Claude + Gemini Tokens</th>
+                  <th>Token Cost</th>
+                  <th>Workday Salary Value</th>
+                  <th>Sage GL Acct</th>
+                  <th>NetSuite JE</th>
+                  <th>ROI</th>
+                </tr>
+              </thead>
+              <tbody id="overview-releases-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: SAGE INTACCT & SAGE X3 ERP HUB -->
+      <section class="tab-panel" id="panel-sage">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Sage Intacct &amp; Sage X3 / 300 General Ledger &amp; Chart of Accounts</h2>
+              <p>Company ID: <code class="mono">BURNIQ-CORP-US</code> &bull; Endpoint: <code class="mono">https://api.intacct.com/ia/api/v1/connection</code></p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-sage" id="btn-test-sage-conn" type="button">Test Sage Intacct Handshake</button>
+              <a class="btn" id="btn-download-sage-csv" href="/api/export/sage" download="burniq_sage_gl_batches.csv">Download Sage Intacct GL Batch CSV</a>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sage GL Account</th>
+                  <th>Account Title</th>
+                  <th>Type</th>
+                  <th>Normal Bal</th>
+                  <th>Department Dim</th>
+                  <th>MTD Balance (USD)</th>
+                  <th>YTD Balance (USD)</th>
+                  <th>ASC 350-40 / Audit Rule</th>
+                </tr>
+              </thead>
+              <tbody id="sage-gl-accounts-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Create & Post Sage GL Batch Form -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Post Automated Sage Intacct / Sage X3 GL Batch</h2>
+              <p>Generate and post a balanced General Ledger batch from verified BurnIQ token &amp; Workday telemetry</p>
+            </div>
+          </div>
+          <form id="form-sage-gl-batch" class="form-grid">
+            <div class="form-field">
+              <label for="sage-entity-select">Sage Entity</label>
+              <select id="sage-entity-select" name="entity_id">
+                <option value="E100">E100 — BurnIQ North America (Sage Intacct)</option>
+                <option value="E200">E200 — BurnIQ EMEA Operations (Sage X3)</option>
+                <option value="E300">E300 — BurnIQ APAC Pte Ltd (Sage 300)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="sage-journal-select">Journal Symbol</label>
+              <select id="sage-journal-select" name="journal_symbol">
+                <option value="AIRD">AIRD — AI R&amp;D Software Capitalization</option>
+                <option value="AIOP">AIOP — AI Engineering OpEx</option>
+                <option value="SGAW">SGAW — SG&amp;A Low-Value Token Audit</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="sage-debit-select">Debit GL Account</label>
+              <select id="sage-debit-select" name="debit_account">
+                <option value="1650-01">1650-01 (CapEx Software R&amp;D)</option>
+                <option value="6120-01">6120-01 (Production AI OpEx)</option>
+                <option value="6120-02">6120-02 (Low-Value Email/Notes Waste)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="sage-amount-input">Batch Amount (USD)</label>
+              <input id="sage-amount-input" name="amount_usd" type="number" step="0.01" value="16450.00" required />
+            </div>
+            <div class="form-field">
+              <label for="sage-project-input">Project / Release Dimension</label>
+              <input id="sage-project-input" name="project_dim" type="text" value="REL-2026.11.4 / JIRA-EPIC-402" required />
+            </div>
+            <div class="form-field">
+              <label for="sage-desc-input">Batch Memo / Audit Trail</label>
+              <input id="sage-desc-input" name="description" type="text" value="ASC 350-40 Capitalization — Claude 3.7 Sonnet & Gemini 2.5 Pro" required />
+            </div>
+            <div class="form-field" style="justify-content: flex-end;">
+              <label>&nbsp;</label>
+              <button class="btn btn-sage" id="btn-submit-sage-batch" type="submit">Post Sage GL Batch</button>
+            </div>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Batch ID</th>
+                  <th>Journal</th>
+                  <th>Date</th>
+                  <th>Entity</th>
+                  <th>Debit / Credit</th>
+                  <th>Amount (USD)</th>
+                  <th>Department &amp; Release Dim</th>
+                  <th>Status</th>
+                  <th>Audit Trail</th>
+                </tr>
+              </thead>
+              <tbody id="sage-batches-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sage AP Vendor Bills -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Sage Accounts Payable (AP) — 3-Way Matched LLM Vendor Bills</h2>
+              <p>Reconciles monthly Anthropic PBC &amp; Google Cloud Vertex AI invoices against granular developer token telemetry</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Bill ID</th>
+                  <th>Vendor</th>
+                  <th>Entity</th>
+                  <th>Invoice Date</th>
+                  <th>Billed Amount</th>
+                  <th>Telemetry Verified</th>
+                  <th>CapEx Eligible</th>
+                  <th>Low-Value Waste</th>
+                  <th>Match Status</th>
+                </tr>
+              </thead>
+              <tbody id="sage-bills-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: ORACLE NETSUITE ONEWORLD & SUITEQL HUB -->
+      <section class="tab-panel" id="panel-netsuite">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Oracle NetSuite OneWorld Multi-Subsidiary Consolidation</h2>
+              <p>Account ID: <code class="mono">TSTDRV2026991</code> &bull; SuiteTalk REST: <code class="mono">https://company.suitetalk.api.netsuite.com/services/rest/record/v1/connection</code></p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-netsuite" id="btn-test-netsuite-conn" type="button">Test NetSuite SuiteTalk Handshake</button>
+              <a class="btn" id="btn-download-netsuite-csv" href="/api/export/netsuite" download="burniq_netsuite_journal_entries.csv">Download NetSuite Journal CSV</a>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Internal ID</th>
+                  <th>OneWorld Subsidiary</th>
+                  <th>Base Currency</th>
+                  <th>Country</th>
+                  <th>Annual LLM PO Commit</th>
+                  <th>MTD Token Burn (USD)</th>
+                  <th>MTD CapEx Amortization</th>
+                  <th>Salesforce Attributed ARR</th>
+                  <th>EBITDA Margin Lift</th>
+                </tr>
+              </thead>
+              <tbody id="netsuite-subs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Interactive SuiteQL Query Runner -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Oracle NetSuite SuiteQL Analytics Query Workbench</h2>
+              <p>Execute live SuiteQL queries against NetSuite transactions, custom AI segments (<code class="mono">cseg_ai_provider</code>, <code class="mono">cseg_task_value_tier</code>), subsidiaries, and amortization schedules</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn suiteql-preset" id="btn-suiteql-je" data-query="SELECT tran_id, trandate, subsidiary, debit_account, credit_account, amount_usd, cseg_ai_provider, cseg_task_value_tier, linked_git_release FROM transaction WHERE type = 'Journal'" type="button">Journal Entries</button>
+              <button class="btn suiteql-preset" id="btn-suiteql-subs" data-query="SELECT internal_id, name, currency, country, llm_po_commit_usd, mtd_token_burn_usd, arr_attributed_usd FROM subsidiary WHERE isinactive = 'F'" type="button">OneWorld Subsidiaries</button>
+              <button class="btn suiteql-preset" id="btn-suiteql-po" data-query="SELECT po_number, vendor, subsidiary, total_commit_usd, consumed_ytd_usd, remaining_balance_usd, burn_utilization_pct FROM purchaseOrder" type="button">LLM Purchase Orders</button>
+              <button class="btn suiteql-preset" id="btn-suiteql-amort" data-query="SELECT schedule_id, release_tag, subsidiary, capitalized_token_usd, capitalized_workday_labor_usd, monthly_amortization_usd FROM amortizationSchedule" type="button">Amortization Schedules</button>
+            </div>
+          </div>
+          <div class="form-grid" style="grid-template-columns: 1fr auto;">
+            <div class="form-field">
+              <label for="suiteql-query-input">SuiteQL Query Statement</label>
+              <input id="suiteql-query-input" class="mono" type="text" value="SELECT tran_id, trandate, subsidiary, debit_account, credit_account, amount_usd, cseg_ai_provider, cseg_task_value_tier, linked_git_release FROM transaction WHERE type = 'Journal'" />
+            </div>
+            <div class="form-field" style="justify-content: flex-end;">
+              <label>&nbsp;</label>
+              <button class="btn btn-netsuite" id="btn-run-suiteql" type="button">Execute SuiteQL</button>
+            </div>
+          </div>
+          <div id="suiteql-meta-bar" style="font-size: 12px; color: var(--text-secondary);"></div>
+          <div class="table-wrap">
+            <table>
+              <thead id="suiteql-results-thead"></thead>
+              <tbody id="suiteql-results-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Post NetSuite Journal Entry Form & Table -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Post Oracle NetSuite OneWorld Journal Entry (<code class="mono">journalEntry</code>)</h2>
+              <p>Create multi-subsidiary journal entries via SuiteTalk REST v1 with automated Jira Epic &amp; Git Release lineage</p>
+            </div>
+          </div>
+          <form id="form-netsuite-je" class="form-grid">
+            <div class="form-field">
+              <label for="ns-subsidiary-select">OneWorld Subsidiary</label>
+              <select id="ns-subsidiary-select" name="subsidiary">
+                <option value="SUB-2 BurnIQ Technologies US Inc.">SUB-2 BurnIQ Technologies US Inc. (USD)</option>
+                <option value="SUB-3 BurnIQ Europe Ltd. (UK)">SUB-3 BurnIQ Europe Ltd. (GBP)</option>
+                <option value="SUB-4 BurnIQ DACH GmbH (Germany)">SUB-4 BurnIQ DACH GmbH (EUR)</option>
+                <option value="SUB-1 BurnIQ Global Holdings Inc.">SUB-1 BurnIQ Global Holdings Inc. (Consolidated)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="ns-debit-select">Debit Account</label>
+              <select id="ns-debit-select" name="debit_account">
+                <option value="16500 Capitalized Software R&D (Intangible Asset)">16500 Capitalized Software R&amp;D (CapEx)</option>
+                <option value="61200 AI Compute & Engineering Payroll Clearing">61200 AI Compute &amp; Eng Clearing (OpEx)</option>
+                <option value="68450 SG&A Non-Productive AI Token Waste">68450 SG&amp;A Non-Productive AI Waste</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="ns-provider-select">Custom Segment: AI Provider (<code class="mono">cseg_ai_provider</code>)</label>
+              <select id="ns-provider-select" name="cseg_ai_provider">
+                <option value="Anthropic Claude + Google Gemini">Anthropic Claude + Google Gemini</option>
+                <option value="Anthropic Claude 3.7 Sonnet">Anthropic Claude 3.7 Sonnet</option>
+                <option value="Google Vertex AI Gemini 2.5 Pro">Google Vertex AI Gemini 2.5 Pro</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="ns-tier-select">Custom Segment: Value Tier (<code class="mono">cseg_task_value_tier</code>)</label>
+              <select id="ns-tier-select" name="cseg_task_value_tier">
+                <option value="Tier 1: Production Release Code">Tier 1: Production Release Code</option>
+                <option value="Tier 2: Architecture & PR Review">Tier 2: Architecture &amp; PR Review</option>
+                <option value="Tier 3: Low-Value Email/Notes Waste">Tier 3: Low-Value Email/Notes Waste</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="ns-amount-input">Journal Amount (USD)</label>
+              <input id="ns-amount-input" name="amount_usd" type="number" step="0.01" value="19850.00" required />
+            </div>
+            <div class="form-field">
+              <label for="ns-memo-input">Memo</label>
+              <input id="ns-memo-input" name="memo" type="text" value="SuiteTalk Automated CapEx Allocation — Release REL-2026.11.4" required />
+            </div>
+            <div class="form-field" style="justify-content: flex-end;">
+              <label>&nbsp;</label>
+              <button class="btn btn-netsuite" id="btn-submit-netsuite-je" type="submit">Post NetSuite Journal Entry</button>
+            </div>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tran ID</th>
+                  <th>Date</th>
+                  <th>Subsidiary</th>
+                  <th>Debit Account</th>
+                  <th>Credit Account</th>
+                  <th>Amount (USD)</th>
+                  <th>AI Provider Segment</th>
+                  <th>Task Value Tier</th>
+                  <th>Linked Release &amp; Jira</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="netsuite-je-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- NetSuite POs and Amortization Schedules -->
+        <div class="grid-2col">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2>NetSuite LLM Commit Purchase Orders (<code class="mono">purchaseOrder</code>)</h2>
+                <p>Annual cloud &amp; token commitment drawdown vs. productive code attribution</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>PO Number</th>
+                    <th>Vendor</th>
+                    <th>Total Commit</th>
+                    <th>Consumed YTD</th>
+                    <th>Remaining</th>
+                    <th>Productive Code %</th>
+                  </tr>
+                </thead>
+                <tbody id="netsuite-po-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2>NetSuite 36-Month R&amp;D CapEx Amortization Schedules</h2>
+                <p>Intangible software asset schedules combining LLM token spend + Workday engineering labor</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Schedule ID</th>
+                    <th>Release Tag</th>
+                    <th>Capitalized Tokens</th>
+                    <th>Workday Labor</th>
+                    <th>Total Asset</th>
+                    <th>Monthly Amort</th>
+                  </tr>
+                </thead>
+                <tbody id="netsuite-amort-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: CODE-TO-RELEASE & WORKDAY SALARY ROI -->
+      <section class="tab-panel" id="panel-releases">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Workday HCM Employee Compensation &amp; AI Velocity ROI Ledger</h2>
+              <p>Correlates loaded employee compensation from Workday (<code class="mono">company.workday.com/api/connection</code>) against shipped commits, CI/CD releases, and ERP cost centers</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Workday ID</th>
+                  <th>Employee &amp; Role</th>
+                  <th>Department</th>
+                  <th>Sage Entity &amp; NetSuite Sub</th>
+                  <th>Loaded Salary</th>
+                  <th>Commits &amp; Releases</th>
+                  <th>Token Spend</th>
+                  <th>Low-Value Spend</th>
+                  <th>Hours Saved</th>
+                  <th>Salary Value Created</th>
+                  <th>Net ROI %</th>
+                  <th>Audit Status</th>
+                </tr>
+              </thead>
+              <tbody id="workday-employees-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: LOW-VALUE TASK AUDIT (EMAILS & NOTES) -->
+      <section class="tab-panel" id="panel-audit">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Low-Value Task Auditor — Internal Emails, Meeting Notes &amp; Unlinked Ad-Hoc Prompts</h2>
+              <p>Detects non-engineering prompts burning frontier models (Claude 3 Opus / Gemini 2.5 Pro) with zero git commits, and isolates waste into Sage GL <code class="mono">6120-02</code> &amp; NetSuite JE <code class="mono">JE-NS-9043</code></p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-apply-smart-routing" type="button">
+                Apply Haiku / Flash Smart Routing &amp; Reconcile Sage + NetSuite GL
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Audit ID</th>
+                  <th>Employee (Workday)</th>
+                  <th>Department</th>
+                  <th>Low-Value Task Category</th>
+                  <th>Model Used</th>
+                  <th>Recommended Model</th>
+                  <th>Prompts</th>
+                  <th>Current Cost</th>
+                  <th>Routed Cost</th>
+                  <th>Monthly Savings</th>
+                  <th>Sage &amp; NetSuite Impact</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="low-value-audit-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: ENTERPRISE CONNECTORS & CSV INGESTION -->
+      <section class="tab-panel" id="panel-connectors">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Connected Enterprise Ecosystem (16 Active Integrations)</h2>
+              <p>Live connection status across Sage Intacct/X3, Oracle NetSuite OneWorld, SAP S/4HANA, Workday, Claude, Gemini, GitHub, GitLab, Bitbucket, Jenkins, Bamboo, Jira, ServiceNow, Zendesk, Salesforce &amp; Power BI</p>
+            </div>
+          </div>
+          <div class="connector-grid" id="connectors-grid"></div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Enterprise CSV Batch Importer &amp; Financial Ledger Exporter</h2>
+              <p>Import custom ERP Journal / GL Batch rows into Sage Intacct or Oracle NetSuite OneWorld, or export reconciled audit CSVs</p>
+            </div>
+            <div class="btn-row">
+              <a class="btn btn-sage" href="/api/export/sage" download="burniq_sage_gl_batches.csv">Export Sage Intacct CSV</a>
+              <a class="btn btn-netsuite" href="/api/export/netsuite" download="burniq_netsuite_journal_entries.csv">Export Oracle NetSuite CSV</a>
+              <a class="btn" href="/api/export/releases" download="burniq_release_attribution.csv">Export Release ROI CSV</a>
+            </div>
+          </div>
+          <form id="form-csv-import" class="form-grid" style="grid-template-columns: 220px 1fr auto;">
+            <div class="form-field">
+              <label for="csv-target-select">Target ERP Ledger</label>
+              <select id="csv-target-select" name="target">
+                <option value="sage">Sage Intacct / Sage X3 GL Batch</option>
+                <option value="netsuite">Oracle NetSuite Journal Entry</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="csv-payload-input">CSV Payload (Header + Rows)</label>
+              <input id="csv-payload-input" class="mono" type="text" value="BATCH_ID,ENTITY_ID,AMOUNT_USD,AUDIT_TRAIL&#10;BATCH-SAGE-CSV99,E100,11200.00,CSV Imported ASC 350-40 AI R&D Batch" />
+            </div>
+            <div class="form-field" style="justify-content: flex-end;">
+              <label>&nbsp;</label>
+              <button class="btn btn-primary" id="btn-import-csv" type="submit">Import CSV Batch</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast-banner" id="toast-banner" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
