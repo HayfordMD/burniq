@@ -1,43 +1,40 @@
-# BurnIQ — Enterprise LLM Telemetry, Sage & Oracle NetSuite ERP & Workday Salary ROI Platform
+# BurnIQ — Enterprise AI Telemetry, Incident Response & ROI Platform
 
-**BurnIQ** attributes corporate LLM usage (**Anthropic Claude** & **Google Cloud Vertex AI Gemini**) across engineering source control (**GitHub**, **GitLab**, **Bitbucket**), CI/CD release pipelines (**Jenkins**, **Bamboo**), agile & ITSM workflows (**Jira**, **ServiceNow**, **Zendesk**), observability & security (**Datadog**, **Substrate**, **New Relic**, **Soluble**, **PagerDuty**, **Opsgenie**), employee compensation (**Workday HCM**), and enterprise financial ledgers (**Sage Intacct / Sage X3**, **Oracle NetSuite OneWorld & SuiteQL**, **SAP S/4HANA**, **Salesforce Revenue Cloud**, and **Microsoft Power BI**).
+**BurnIQ** correlates corporate **Anthropic Claude** & **Google Gemini** token consumption against engineering velocity, incident MTTR savings (**PagerDuty** & **Opsgenie / Genie**), CI/CD release impact, Workday HRM compensation, ERP/CRM financial ledgers, and low-value task overhead.
 
----
+## Key Capabilities
 
-## Core Enterprise Capabilities
+1. **PagerDuty (`api.pagerduty.com` & `events.pagerduty.com/v2/enqueue`)**:
+   - Real-time incident lifecycle management (`triggered` -> `acknowledged` -> `resolved`).
+   - Events v2 API support for automated alert triggers, acknowledgments, and resolutions.
+   - Escalation policies, on-call schedules (`PD-SCH-01`..`04`), service directory (`PD-SVC-01`..`04`), and automated event orchestration rules (`PD-RULE-01`..`04`).
+   - AI remediation correlation showing Claude & Gemini root-cause analysis and MTTR hours/salary saved.
 
-### 1. Sage Intacct, Sage X3 & Sage 300 ERP Integration (`/api/erp/sage`)
-- **Multi-Entity General Ledger Consolidation**:
-  - `E100` — *BurnIQ North America Inc.* (Sage Intacct Multi-Entity, USD)
-  - `E200` — *BurnIQ EMEA Operations Ltd.* (Sage X3 Enterprise, EUR)
-  - `E300` — *BurnIQ APAC Pte. Ltd.* (Sage 300 Cloud, SGD)
-- **ASC 350-40 / IAS 38 Software Development Capitalization**:
-  - Automatically maps verified engineering token spend + Workday loaded engineering hours from shipped Git/CI-CD releases into **Sage GL Account `1650-01` (Capitalized AI R&D)** vs **`6120-01` (Production AI OpEx)** and **`6120-02` (Low-Value Email/Notes SG&A Waste)**.
-- **3-Way Matched AP Vendor Bills**:
-  - Reconciles monthly Anthropic PBC and Google Cloud Vertex AI invoices against granular developer token telemetry.
-- **Live GL Batch Creation & CSV Export**:
-  - Create and post balanced Sage Intacct GL Batches (`POST /api/erp/sage/gl-batch`) and export Sage Intacct-compatible CSV batches (`GET /api/export/sage`).
+2. **Opsgenie / Genie (`api.opsgenie.com` & `/api/genie/*`)**:
+   - Full Alert API v2 lifecycle (`open`, `acknowledged`, `snoozed`, `closed`, `escalate`) with bi-directional PagerDuty incident mirroring.
+   - Responder routing teams (`team-sre-core`, `team-llm-platform`, `team-finops-erp`, `team-secops`) and on-call rotations (`OG-SCH-01`..`04`).
+   - Active heartbeat monitoring (`claude-anthropic-enterprise-hb`, `gemini-vertex-telemetry-hb`, `cicd-release-correlator-hb`, `workday-netsuite-sage-roi-hb`, `datadog-newrelic-soluble-bridge-hb`) with live ping support.
 
-### 2. Oracle NetSuite OneWorld & SuiteQL Integration (`/api/erp/netsuite`)
-- **OneWorld Multi-Subsidiary Hierarchy**:
-  - `SUB-1` (*BurnIQ Global Holdings Consolidated USD*), `SUB-2` (*BurnIQ Technologies US Inc.*), `SUB-3` (*BurnIQ Europe Ltd. GBP*), and `SUB-4` (*BurnIQ DACH GmbH EUR*).
-- **SuiteTalk REST v1 Journal Entries & Custom Segments**:
-  - Posts multi-subsidiary `journalEntry` records tagged with Custom Segments `cseg_ai_provider` (*Anthropic Claude*, *Google Gemini*) and `cseg_task_value_tier` (*Tier 1: Production Release Code*, *Tier 2: Architecture & PR Review*, *Tier 3: Low-Value Email/Notes Waste*).
-- **Interactive SuiteQL Analytics Query Engine (`POST /api/erp/netsuite/suiteql`)**:
-  - Query NetSuite transactions, OneWorld subsidiaries, annual LLM commit Purchase Orders (`PO-NS-8841`, `PO-NS-8842`), and 36-month R&D CapEx Amortization Schedules (`AMORT-NS-301`..`303`).
-
-### 3. Low-Value Task Auditor (Emails, Meeting Notes & Ad-Hoc Prompts)
-- Identifies non-engineering prompts burning frontier models (`claude-3-opus`, `claude-3-7-sonnet`, `gemini-2.5-pro`) on routine internal emails and meeting notes with zero git commits.
-- Provides 1-click **Smart Model Routing (`POST /api/audit/optimize-routing`)** to downgrade routine email/notes traffic to `claude-3-5-haiku` / `gemini-2.5-flash` and automatically update **Sage GL `6120-02`** and **Oracle NetSuite `JE-NS-9043`**.
-
----
+3. **22 Enterprise Connectors & Mock Enterprise Gateway**:
+   - **Incident Management**: PagerDuty, Opsgenie (Genie)
+   - **LLM Providers**: Anthropic Claude Enterprise, Google Gemini Enterprise
+   - **SCM & CI/CD**: GitHub Enterprise, GitLab Enterprise, Bitbucket Cloud, Jenkins CI, Atlassian Bamboo
+   - **ITSM & Support**: Jira Software, ServiceNow ITSM, Zendesk Enterprise
+   - **Observability & DevSecOps**: Datadog, Substrate AI FinOps, New Relic One, Soluble Cloud Security
+   - **HRM, ERP, CRM & BI**: Workday HRM, Salesforce CRM, SAP S/4HANA ERP, Sage Intacct / X3, Oracle NetSuite ERP, Microsoft Power BI, and CSV Import/Export
 
 ## Running Locally
 
 ```bash
-# Start Main BurnIQ Platform on Port 8000
-uvicorn main:app --host 0.0.0.0 --port 8000
+# Main BurnIQ Platform (Port 8000)
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 
-# Start Mock Enterprise Gateway on Port 8090
-uvicorn mock_enterprise:app --host 0.0.0.0 --port 8090
+# Standalone Mock Enterprise Gateway (Port 8090)
+uvicorn app.mock_enterprise:mock_app --host 0.0.0.0 --port 8090
+```
+
+## Running Tests
+
+```bash
+python3 -m unittest discover -s tests -v
 ```
