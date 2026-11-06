@@ -1,2 +1,2 @@
-"""Root entrypoint re-exporting unified BurnIQ FastAPI app (Datadog, Substrate, New Relic, Soluble, PagerDuty, Opsgenie, Sage & NetSuite)."""
-from app.main import app  # noqa: F401
+"""Root entrypoint re-exporting unified backend.main:app (including PagerDuty, Opsgenie, Dual-ERP, 4-Persona Dashboards, Service Connection ON/OFF switches, Hybrid Search & Google Flash 3-8 Fast Lite RAG)."""
+from backend.main import app  # noqa: F401

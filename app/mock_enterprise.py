@@ -320,7 +320,7 @@ def mock_gateway_health() -> Dict[str, Any]:
     }
 
 
-from backend.mock_enterprise import build_vendor_connection_payload
+from backend.observability_mock import build_vendor_connection_payload
 
 
 @mock_router.api_route(
@@ -345,9 +345,26 @@ async def mock_universal_enterprise_endpoint(
             "highlights": "Connected via BurnIQ Enterprise Gateway",
         }
     )
+    circuit_state = "ON"
+    try:
+        from backend.database import get_connection
+        db_conn = get_connection()
+        cur = db_conn.cursor()
+        cur.execute(
+            "SELECT enabled FROM service_connections WHERE endpoint_url LIKE ?",
+            (f"%{host}%",),
+        )
+        row = cur.fetchone()
+        db_conn.close()
+        if row is not None and not bool(row["enabled"]):
+            circuit_state = "OFF"
+    except Exception:
+        pass
+
     vendor_payload = build_vendor_connection_payload(f"{host}/{rest_of_path}")
     return {
         **vendor_payload,
+        "circuit_state": circuit_state,
         "status": "connected",
         "ok": True,
         "host": host,

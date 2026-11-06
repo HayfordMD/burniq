@@ -1,645 +1,530 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BurnIQ — Datadog, Substrate, New Relic &amp; Soluble Enterprise LLM Telemetry &amp; ROI Platform</title>
-  <meta name="description" content="BurnIQ Enterprise Telemetry &amp; ROI Platform: Tracks Claude &amp; Gemini usage across Datadog, Substrate, New Relic, Soluble, GitHub, GitLab, Bitbucket, Jenkins, Bamboo, Jira, Workday HRM salaries, SAP, Sage, Oracle NetSuite, Salesforce, and Low-Value Tasks." />
-  <link rel="stylesheet" href="/static/styles.css" />
+  <title>BurnIQ — Enterprise AI Telemetry, Service Connection Control &amp; Flash 3-8 Fast Lite RAG Platform</title>
+  <meta name="description" content="BurnIQ Enterprise AI Telemetry &amp; FinOps Platform: Turn service connections ON and OFF in real time, monitor Technical Ops, Developer, Manager, and C-Suite metric dashboards, and query the RAG-trained Google Flash 3-8 Fast Lite LLM." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
-  <header class="app-header">
+  <!-- Sticky Enterprise Navigation Header -->
+  <header class="app-header" id="burniq-top-header">
     <div class="header-inner">
       <div class="brand-group">
-        <div class="brand-mark">BQ</div>
+        <div class="brand-mark" aria-hidden="true">BIQ</div>
         <div>
-          <h1 class="brand-title">
-            BurnIQ Enterprise Telemetry &amp; FinOps Command
-            <span class="badge badge-emerald">v2.4 Enterprise</span>
-          </h1>
-          <div class="brand-subtitle">
-            Claude &amp; Gemini Attribution · <strong>Datadog</strong> · <strong>Substrate</strong> · <strong>New Relic</strong> · <strong>Soluble</strong> · SCM/CI-CD · Workday HRM &amp; ERP ROI
+          <div class="brand-title">
+            <span>BurnIQ Enterprise</span>
+            <span class="nav-badge" id="header-model-badge">Flash 3-8 Fast Lite RAG</span>
           </div>
+          <span class="brand-subtitle">Service Connection Control · Multi-Persona Telemetry · Hybrid RAG Intelligence</span>
         </div>
       </div>
-      <div class="header-badges">
-        <div class="status-pill" id="header-dd-status">
-          <span class="status-dot"></span>
-          <span>Datadog: CONNECTED</span>
-        </div>
-        <div class="status-pill" id="header-sub-status">
-          <span class="status-dot"></span>
-          <span>Substrate: CONNECTED</span>
-        </div>
-        <div class="status-pill" id="header-nr-status">
-          <span class="status-dot"></span>
-          <span>New Relic: CONNECTED</span>
-        </div>
-        <div class="status-pill" id="header-sol-status">
-          <span class="status-dot"></span>
-          <span>Soluble: CONNECTED</span>
-        </div>
-        <button class="btn btn-primary btn-sm" id="btn-verify-all-header" onclick="verifyAllConnectorsBanner()">
-          Verify All 23 Live Connectors
+
+      <nav class="primary-nav" aria-label="Primary Platform Navigation">
+        <button type="button" class="nav-tab active" id="nav-tab-dashboards" data-view="dashboards">
+          <span>Persona Dashboards</span>
+          <span class="nav-badge" id="badge-active-persona">C-Suite</span>
+        </button>
+        <button type="button" class="nav-tab" id="nav-tab-connections" data-view="connections">
+          <span>Service Connections (ON/OFF)</span>
+          <span class="nav-badge" id="badge-connections-count">15/16 ON</span>
+        </button>
+        <button type="button" class="nav-tab" id="nav-tab-search-rag" data-view="search-rag">
+          <span>Search &amp; Flash-Lite RAG LLM</span>
+          <span class="nav-badge amber" id="badge-rag-docs">28 Chunks</span>
+        </button>
+        <a href="/static/index.html#panel-observability" class="nav-tab" id="nav-link-panel-observability" style="text-decoration:none;">
+          <span>Datadog · Substrate · New Relic · Soluble &amp; ERP</span>
+          <span class="nav-badge">Live</span>
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="quick-search-trigger" id="btn-header-quick-search" title="Jump to Enterprise Hybrid Search &amp; Flash-Lite RAG">
+          <span>Search &amp; Ask Flash-Lite...</span>
+          <kbd class="kbd-shortcut">Ctrl+K</kbd>
+        </button>
+        <button type="button" class="btn btn-sm" id="btn-theme-toggle" title="Switch Dark / Light Surface Theme">
+          <span id="theme-toggle-label">Light Mode</span>
         </button>
       </div>
     </div>
   </header>
 
-  <nav class="nav-bar" aria-label="Primary Telemetry Navigation">
-    <div class="nav-inner">
-      <button class="nav-tab active" id="nav-btn-observability" onclick="switchMainTab('observability')">
-        Datadog · Substrate · New Relic · Soluble
-        <span class="nav-badge">Core 4 Live</span>
-      </button>
-      <button class="nav-tab" id="nav-btn-attribution" onclick="switchMainTab('attribution')">
-        Code-to-Release Attribution
-        <span class="nav-badge">GitHub/GitLab/Jenkins/Bamboo</span>
-      </button>
-      <button class="nav-tab" id="nav-btn-low-value" onclick="switchMainTab('low-value')">
-        Low-Value Task &amp; Substrate Audit
-        <span class="nav-badge">$1.74M/yr Recoverable</span>
-      </button>
-      <button class="nav-tab" id="nav-btn-workday-roi" onclick="switchMainTab('workday-roi')">
-        Workday Salary ROI &amp; ERP
-        <span class="nav-badge">Workday/SAP/Sage/NetSuite</span>
-      </button>
-      <button class="nav-tab" id="nav-btn-connectors" onclick="switchMainTab('connectors')">
-        Enterprise Connectors &amp; CSV Studio
-        <span class="nav-badge">23 Online</span>
-      </button>
+  <!-- Live Service Connection Quick-Toggle Strip (Always Accessible) -->
+  <section class="connection-quick-strip" aria-label="Live Service Connection Circuit Strip">
+    <div class="quick-strip-inner">
+      <div class="strip-status-summary">
+        <span class="status-dot online" id="strip-global-dot"></span>
+        <strong id="strip-online-summary">15 / 16 Connectors ON</strong>
+        <span id="strip-throughput-summary" class="tabular-nums">(54,190 ev/hr)</span>
+      </div>
+      <div class="strip-pills-scroll" id="quick-strip-pills">
+        <!-- Populated dynamically with 1-click ON/OFF connector pills -->
+      </div>
+      <div style="display:flex;gap:0.4rem;">
+        <button type="button" class="btn btn-sm btn-emerald" id="btn-strip-all-on">All ON</button>
+        <button type="button" class="btn btn-sm btn-coral-subtle" id="btn-strip-all-off">All OFF</button>
+      </div>
     </div>
-  </nav>
+  </section>
 
-  <main class="main-container">
-    <!-- Global Executive KPI Strip -->
-    <section class="kpi-grid" id="executive-kpi-strip" aria-label="Executive Telemetry KPIs">
-      <div class="kpi-card">
-        <div class="kpi-label">Net Monthly Workday ROI</div>
-        <div class="kpi-value text-emerald tabular" id="kpi-net-roi">$504,000</div>
-        <div class="kpi-sub tabular" id="kpi-net-roi-sub">745.6% Net ROI on $67.6k LLM Spend</div>
+  <!-- Main Workspace -->
+  <main class="main-container" id="burniq-main-workspace">
+
+    <!-- ====================================================================
+         VIEW 1: MULTI-PERSONA CHARTS & METRIC DASHBOARDS
+         (Technical Ops, Developers, Managers, C-Suite)
+         ==================================================================== -->
+    <section id="view-dashboards" class="workspace-view">
+      <!-- 4 Role-Based Persona Selector Cards -->
+      <div class="persona-switcher-bar" role="tablist" aria-label="Organizational Persona Dashboards">
+        <button type="button" class="persona-card-btn" id="persona-btn-techops" data-persona="techops" role="tab" aria-selected="false">
+          <div class="persona-card-top">
+            <span class="persona-role-tag">01 · Technical Ops &amp; SRE</span>
+            <span class="code-badge">Infra &amp; Latency</span>
+          </div>
+          <div class="persona-card-title">Technical Ops Dashboard</div>
+          <div class="persona-card-desc">Connector uptime, ingestion ev/min, Flash 3-8 Lite P95 latency &amp; ServiceNow MTTR</div>
+        </button>
+
+        <button type="button" class="persona-card-btn" id="persona-btn-developers" data-persona="developers" role="tab" aria-selected="false">
+          <div class="persona-card-top">
+            <span class="persona-role-tag">02 · Developers &amp; Architects</span>
+            <span class="code-badge">Code -> Release</span>
+          </div>
+          <div class="persona-card-title">Developers Dashboard</div>
+          <div class="persona-card-desc">GitHub/GitLab/Bitbucket commit attribution, PR cycle time &amp; Jenkins/Bamboo CI pass rate</div>
+        </button>
+
+        <button type="button" class="persona-card-btn" id="persona-btn-managers" data-persona="managers" role="tab" aria-selected="false">
+          <div class="persona-card-top">
+            <span class="persona-role-tag">03 · Engineering Managers</span>
+            <span class="code-badge">Velocity &amp; Audit</span>
+          </div>
+          <div class="persona-card-title">Managers Dashboard</div>
+          <div class="persona-card-desc">Jira sprint story points, hours reclaimed &amp; high-value vs low-value email/notes audit</div>
+        </button>
+
+        <button type="button" class="persona-card-btn active" id="persona-btn-csuite" data-persona="csuite" role="tab" aria-selected="true">
+          <div class="persona-card-top">
+            <span class="persona-role-tag">04 · C-Suite &amp; FinOps</span>
+            <span class="code-badge">5.4x Net ROI</span>
+          </div>
+          <div class="persona-card-title">C-Suite Executive Dashboard</div>
+          <div class="persona-card-desc">Workday payroll ROI, SAP cost center variance &amp; Google Flash 3-8 Fast Lite savings</div>
+        </button>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Datadog DORA Velocity</div>
-        <div class="kpi-value text-cyan tabular" id="kpi-dd-dora">4.8 / day</div>
-        <div class="kpi-sub tabular">6.2h Lead Time · 3.1% Change Failure Rate</div>
+
+      <!-- Active Persona Header & Global Filters -->
+      <div class="view-header-bar" style="margin-top:1.15rem;">
+        <div class="view-heading-group">
+          <h1 id="dashboard-main-title">C-Suite Executive Boardroom — Workday Payroll ROI, SAP FinOps &amp; Strategic AI Yield</h1>
+          <p id="dashboard-main-subtitle">Consolidated CFO/CTO/CEO view of net enterprise AI ROI, Workday salary hours reclaimed, SAP cost-center variance, and Google Flash 3-8 Fast Lite savings.</p>
+        </div>
+        <div class="view-controls-group">
+          <label for="select-dashboard-department" style="font-size:0.78rem;color:var(--text-muted);">Department:</label>
+          <select id="select-dashboard-department" class="select-control" aria-label="Filter by Department">
+            <option value="all">All Enterprise Departments</option>
+          </select>
+
+          <label for="select-dashboard-timeframe" style="font-size:0.78rem;color:var(--text-muted);">Window:</label>
+          <select id="select-dashboard-timeframe" class="select-control" aria-label="Select Timeframe">
+            <option value="24h">Last 24 Hours</option>
+            <option value="7d">Last 7 Days</option>
+            <option value="30d" selected>Last 30 Days (Monthly)</option>
+            <option value="90d">Last 90 Days (Quarterly)</option>
+            <option value="12m">Trailing 12 Months</option>
+          </select>
+
+          <button type="button" class="btn btn-amber" id="btn-ask-persona-ai">
+            <span>Analyze View with Flash 3-8 Lite</span>
+          </button>
+        </div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Substrate Low-Value Audit</div>
-        <div class="kpi-value text-amber tabular" id="kpi-sub-waste">$146,800 / mo</div>
-        <div class="kpi-sub tabular">Salary Burned on Routine Emails &amp; Notes</div>
+
+      <!-- 6 Top-Line KPI Cards -->
+      <div class="kpi-grid" id="dashboard-kpi-grid">
+        <!-- Rendered dynamically -->
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">New Relic Fleet Apdex</div>
-        <div class="kpi-value text-emerald tabular" id="kpi-nr-apdex">0.97 Apdex</div>
-        <div class="kpi-sub tabular">-31.4% p95 Latency on AI Releases</div>
+
+      <!-- 4 Interactive Charts (2x2 Grid) -->
+      <div class="charts-grid" id="dashboard-charts-grid" style="margin-top:1.25rem;">
+        <!-- Rendered dynamically via BurnIQCharts -->
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Soluble IaC SecOps Gate</div>
-        <div class="kpi-value text-cyan tabular" id="kpi-sol-pass">96.4% Pass</div>
-        <div class="kpi-sub tabular">11.5m Auto-Fix MTTR vs 185m Manual</div>
+
+      <!-- C-Suite & FinOps Interactive Lightweight Model Routing Simulator -->
+      <div class="simulator-panel" id="finops-scenario-simulator" style="margin-top:1.25rem;">
+        <div class="chart-header">
+          <div>
+            <h2 class="chart-title">Interactive FinOps &amp; Google Flash 3-8 Fast Lite Routing Simulator</h2>
+            <p class="chart-subtitle">Simulate annual savings, token unit cost, and Workday payroll ROI by adjusting the share of enterprise RAG &amp; telemetry traffic routed to Google Flash 3-8 Fast Lite ($0.035/1M tokens).</p>
+          </div>
+          <span class="code-badge" id="sim-model-badge">Active Model: google/gemini-3-8-flash-lite</span>
+        </div>
+        <div class="simulator-grid">
+          <div class="slider-group">
+            <div class="slider-row">
+              <label for="slider-flash-share">
+                <span>Traffic Routed to Google Flash 3-8 Fast Lite</span>
+                <strong id="val-flash-share" class="tabular-nums" style="color:var(--accent-emerald);">78%</strong>
+              </label>
+              <input type="range" id="slider-flash-share" min="0" max="95" value="78" />
+            </div>
+            <div class="slider-row">
+              <label for="slider-eng-headcount">
+                <span>Active Technical &amp; Ops Headcount (Workday Bands)</span>
+                <strong id="val-eng-headcount" class="tabular-nums" style="color:var(--accent-cyan);">69 seats</strong>
+              </label>
+              <input type="range" id="slider-eng-headcount" min="15" max="350" value="69" />
+            </div>
+          </div>
+          <div class="kpi-grid" style="grid-template-columns:repeat(4, 1fr);">
+            <div class="kpi-card">
+              <span class="kpi-label">Projected Monthly Burn</span>
+              <span class="kpi-value" id="sim-monthly-burn">$25,340</span>
+              <span class="kpi-subvalue">vs $60,160 unoptimized</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Annualized Flash-Lite Savings</span>
+              <span class="kpi-value" id="sim-annual-savings" style="color:var(--accent-emerald);">$417,840</span>
+              <span class="kpi-subvalue">Direct token FinOps yield</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Workday Value Reclaimed</span>
+              <span class="kpi-value" id="sim-workday-value">$286,235/mo</span>
+              <span class="kpi-subvalue">Verified hourly band ROI</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Net ROI Multiple</span>
+              <span class="kpi-value" id="sim-roi-multiple" style="color:var(--accent-amber);">5.4x</span>
+              <span class="kpi-subvalue">Payback &lt; 6 days</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Persona Telemetry Table -->
+      <div class="data-table-panel" style="margin-top:1.25rem;">
+        <div class="chart-header">
+          <div>
+            <h2 class="chart-title" id="dashboard-table-title">Executive Business Unit FinOps &amp; Workday Salary ROI Ledger</h2>
+            <p class="chart-subtitle">Live records synchronized from active enterprise service connections</p>
+          </div>
+          <button type="button" class="btn btn-sm" id="btn-export-table-csv">Export CSV</button>
+        </div>
+        <div class="table-scroll" id="dashboard-table-container">
+          <!-- Rendered dynamically -->
+        </div>
       </div>
     </section>
 
-    <!-- TAB 1: DATADOG, SUBSTRATE, NEW RELIC & SOLUBLE HUB -->
-    <div class="tab-panel active" id="tab-observability">
-      <!-- Top 4 Vendor Cards -->
-      <div class="featured-strip" id="featured-4-cards"></div>
-
-      <!-- Sub-navigation Filter Bar -->
-      <div class="subnav-bar">
-        <div class="subnav-pills">
-          <button class="subnav-btn active" id="subbtn-all" onclick="filterVendorSection('all')">
-            All 4 Integrations (Unified)
-          </button>
-          <button class="subnav-btn" id="subbtn-datadog" onclick="filterVendorSection('datadog')">
-            1. Datadog (LLM Obs · DORA · APM)
-          </button>
-          <button class="subnav-btn" id="subbtn-substrate" onclick="filterVendorSection('substrate')">
-            2. Substrate (M365 Graph · AI Compute)
-          </button>
-          <button class="subnav-btn" id="subbtn-newrelic" onclick="filterVendorSection('newrelic')">
-            3. New Relic (APM · AI Monitoring · NRQL)
-          </button>
-          <button class="subnav-btn" id="subbtn-soluble" onclick="filterVendorSection('soluble')">
-            4. Soluble (IaC Security · Live Scanner)
-          </button>
+    <!-- ====================================================================
+         VIEW 2: SERVICE CONNECTIONS CONTROL CENTER (TURN ON / OFF)
+         ==================================================================== -->
+    <section id="view-connections" class="workspace-view" style="display:none;">
+      <div class="view-header-bar">
+        <div class="view-heading-group">
+          <h1>Enterprise Service Connection Control Center (Turn ON / OFF)</h1>
+          <p>Individually or bulk-toggle each of the 16 enterprise service connections. Turning a connection OFF immediately pauses webhook ingestion, halts token spend, updates all 4 persona dashboards, and isolates its live stream from RAG retrieval.</p>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <a class="btn btn-sm" href="/api/csv/export/datadog" download>Export Datadog CSV</a>
-          <a class="btn btn-sm" href="/api/csv/export/substrate" download>Export Substrate CSV</a>
-          <a class="btn btn-sm" href="/api/csv/export/newrelic" download>Export New Relic CSV</a>
-          <a class="btn btn-sm" href="/api/csv/export/soluble" download>Export Soluble CSV</a>
+        <div class="view-controls-group">
+          <select id="select-conn-category" class="select-control" aria-label="Filter Connections by Category">
+            <option value="all">All Categories (16)</option>
+            <option value="LLM Gateways">LLM Gateways</option>
+            <option value="Source Control">Source Control (GitHub/GitLab/Bitbucket)</option>
+            <option value="CI/CD Pipelines">CI/CD Pipelines (Jenkins/Bamboo)</option>
+            <option value="Issue & ITSM">Issue &amp; ITSM (Jira/ServiceNow/Zendesk)</option>
+            <option value="ERP / HR / CRM">ERP / HR / CRM (Workday/Salesforce/SAP)</option>
+            <option value="BI & Ingestion">BI &amp; Ingestion (Power BI/Email/CSV)</option>
+          </select>
+
+          <select id="select-conn-status" class="select-control" aria-label="Filter Connections by Status">
+            <option value="all">All Circuit States</option>
+            <option value="online">ON (Online Only)</option>
+            <option value="paused">OFF (Paused Only)</option>
+          </select>
+
+          <button type="button" class="btn btn-emerald" id="btn-bulk-turn-on">Turn Category / All ON</button>
+          <button type="button" class="btn btn-coral-subtle" id="btn-bulk-turn-off">Turn Category / All OFF</button>
         </div>
       </div>
 
-      <!-- Cross-Platform Correlation Matrix -->
-      <section class="section-card" id="section-correlations">
-        <div class="section-header">
+      <!-- Connection Summary Banner -->
+      <div class="kpi-grid" id="connections-summary-kpis" style="margin-bottom:1.25rem;">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- 16 Service Connection Cards Grid -->
+      <div class="connections-grid" id="connections-cards-grid">
+        <!-- Populated dynamically with tactile ON/OFF switches -->
+      </div>
+
+      <!-- Connection Circuit Event Audit Log -->
+      <div class="data-table-panel" style="margin-top:1.25rem;">
+        <div class="chart-header">
           <div>
-            <h2 class="section-title">Cross-Platform Telemetry Correlation: Datadog × Substrate × New Relic × Soluble</h2>
-            <p class="section-desc">End-to-end linkage across LLM prompts, Substrate graph signals, Soluble IaC PR gates, CI/CD deployments, and production Datadog/New Relic telemetry.</p>
-          </div>
-          <span class="badge badge-cyan">Real-Time Correlation Engine</span>
-        </div>
-        <div class="table-wrap">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Correlation ID &amp; Workflow</th>
-                <th>Datadog (LLM Obs &amp; DORA)</th>
-                <th>Substrate (M365 Graph &amp; Compute)</th>
-                <th>New Relic (APM &amp; NerdGraph)</th>
-                <th>Soluble (IaC &amp; DevSecOps)</th>
-                <th>Net Business &amp; Salary Impact</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-correlations"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- PILLAR 1: DATADOG -->
-      <section class="section-card vendor-section" id="vendor-sec-datadog">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">1. Datadog Enterprise Observability (`api.datadoghq.com`) — LLM Obs, DORA &amp; CI Visibility</h2>
-            <p class="section-desc">Correlates Anthropic Claude &amp; Google Gemini trace spans with GitHub/GitLab/Bitbucket/Jenkins/Bamboo CI pipelines and production APM monitors.</p>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn btn-sm" id="btn-test-datadog" onclick="testSingleConnectorUI('datadog')">Test Datadog Connection</button>
-            <span class="badge badge-emerald">Agent v7.58.1-ent · US1-PROD</span>
+            <h2 class="chart-title">Service Connection Circuit Toggle &amp; Health Check Audit Trail</h2>
+            <p class="chart-subtitle">Real-time log of every ON/OFF state change, diagnostic ping, and RAG document sync</p>
           </div>
         </div>
-
-        <div class="dual-grid">
-          <div class="console-box">
-            <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--accent-cyan);">
-              Datadog DORA Metrics: AI-Assisted (Claude/Gemini) vs. Human Baseline
-            </h3>
-            <div id="datadog-dora-bars"></div>
-          </div>
-          <div class="console-box">
-            <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--accent-emerald);">
-              Datadog CI Visibility by Pipeline Provider (30d)
-            </h3>
-            <div class="table-wrap">
-              <table class="telemetry-table">
-                <thead>
-                  <tr>
-                    <th>CI/CD Provider</th>
-                    <th>Deploys (30d)</th>
-                    <th>Lead Time</th>
-                    <th>Change Failure Rate</th>
-                    <th>MTTR</th>
-                    <th>AI Commit Share</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-dd-cicd"></tbody>
-              </table>
-            </div>
-          </div>
+        <div class="table-scroll" id="connection-events-table-wrap">
+          <!-- Populated dynamically -->
         </div>
+      </div>
+    </section>
 
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px;">Datadog LLM Observability Trace Spans (`GET /api.datadoghq.com/api/v2/llm-obs/spans`)</h3>
-        <div class="table-wrap" style="margin-bottom:20px;">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Trace / Span ID</th>
-                <th>Service &amp; Provider</th>
-                <th>Model</th>
-                <th>Engineer / Dept</th>
-                <th>Value Classification</th>
-                <th>Tokens</th>
-                <th>Cost (USD)</th>
-                <th>Latency / TTFT</th>
-                <th>Git Commit · Jira · Release</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-dd-spans"></tbody>
-          </table>
+    <!-- ====================================================================
+         VIEW 3: ROBUST HYBRID SEARCH & CUSTOMIZED RAG-TRAINED LLM STUDIO
+         (Google Flash 3-8 Fast Lite)
+         ==================================================================== -->
+    <section id="view-search-rag" class="workspace-view" style="display:none;">
+      <div class="view-header-bar">
+        <div class="view-heading-group">
+          <h1>Unified Enterprise Search &amp; Google Flash 3-8 Fast Lite RAG Studio</h1>
+          <p>Hybrid BM25 + 64-Dim SVD Vector Search across all active service connections, paired with our custom RAG-trained lightweight LLM (<code>google/gemini-3-8-flash-lite</code> at $0.035/1M tokens, 94ms avg TTFT).</p>
         </div>
-
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px;">Datadog Production APM &amp; LLM Anomaly Monitors (`GET /api.datadoghq.com/api/v1/monitor`)</h3>
-        <div class="table-wrap">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Monitor ID</th>
-                <th>Status</th>
-                <th>Monitor Name &amp; Service</th>
-                <th>Threshold vs. Current</th>
-                <th>Linked Release</th>
-                <th>Automated Remediation / FinOps Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-dd-monitors"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- PILLAR 2: SUBSTRATE -->
-      <section class="section-card vendor-section" id="vendor-sec-substrate">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">2. Substrate Telemetry (`substrate.office.com` &amp; `api.substrate.run`) — M365 Graph Audit &amp; AI Compute</h2>
-            <p class="section-desc">Audits low-value communication tasks (Outlook emails, Teams meeting notes, Loop status memos) against Workday salaries, plus multi-cloud AI compute clusters.</p>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn btn-sm" id="btn-test-substrate" onclick="testSingleConnectorUI('substrate')">Test Substrate Connection</button>
-            <span class="badge badge-amber">$146,800/mo Low-Value Salary Burn Detected</span>
-          </div>
-        </div>
-
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px;">Microsoft Substrate Communication &amp; Knowledge Graph Signals (`substrate.office.com/v1.0/signals`)</h3>
-        <div class="table-wrap" style="margin-bottom:20px;">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Signal ID &amp; Channel</th>
-                <th>Artifact Type &amp; Dept</th>
-                <th>LLM Model Used</th>
-                <th>Monthly Events &amp; Tokens</th>
-                <th>LLM Cost</th>
-                <th>Workday Hours &amp; Salary Burn</th>
-                <th>Jira / Git Link</th>
-                <th>Classification</th>
-                <th>Governance Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-substrate-signals"></tbody>
-          </table>
-        </div>
-
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px;">Substrate Multi-Cloud AI Compute Workloads (`api.substrate.run/v1/workloads`)</h3>
-        <div class="table-wrap">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Workload ID &amp; Fleet Name</th>
-                <th>Cloud Substrate &amp; Region</th>
-                <th>Accelerator Hardware</th>
-                <th>Target Model</th>
-                <th>Utilization</th>
-                <th>p95 Latency</th>
-                <th>Monthly Compute Cost</th>
-                <th>Attributed Releases &amp; Value</th>
-                <th>ROI Multiple</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-substrate-workloads"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- PILLAR 3: NEW RELIC -->
-      <section class="section-card vendor-section" id="vendor-sec-newrelic">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">3. New Relic APM, AI Monitoring &amp; NerdGraph (`api.newrelic.com`)</h2>
-            <p class="section-desc">Monitors APM Golden Signals (Apdex, p95/p99 latency, throughput, error rate) before &amp; after AI-assisted deployments, plus live NRQL telemetry queries.</p>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn btn-sm" id="btn-test-newrelic" onclick="testSingleConnectorUI('newrelic')">Test New Relic Connection</button>
-            <span class="badge badge-emerald">NerdGraph GraphQL + NRQL Live</span>
-          </div>
-        </div>
-
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px;">New Relic APM Golden Signals &amp; Change Tracking (`GET /api.newrelic.com/v2/apm/applications`)</h3>
-        <div class="table-wrap" style="margin-bottom:20px;">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>App ID &amp; Service Name</th>
-                <th>Service Tier</th>
-                <th>Apdex Score</th>
-                <th>Throughput (RPM)</th>
-                <th>p95 / p99 Latency</th>
-                <th>Pre-AI Release p95</th>
-                <th>Latency Delta</th>
-                <th>Error Rate</th>
-                <th>Release · CI/CD · LLM Attribution</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-nr-apm"></tbody>
-          </table>
-        </div>
-
-        <div class="dual-grid">
-          <div>
-            <h3 style="font-size:14px; font-weight:700; margin-bottom:10px;">New Relic AI Monitoring (`LlmChatCompletionSummary` · 24h)</h3>
-            <div class="table-wrap">
-              <table class="telemetry-table">
-                <thead>
-                  <tr>
-                    <th>Model &amp; Provider</th>
-                    <th>Requests (24h)</th>
-                    <th>Tokens (24h)</th>
-                    <th>Avg Latency</th>
-                    <th>Retry %</th>
-                    <th>Cost (24h)</th>
-                    <th>Primary Attribution</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-nr-aimodels"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Interactive NRQL & Cross-Observability Query Console -->
-          <div class="console-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <h3 style="font-size:14px; font-weight:700; color:var(--accent-cyan);">
-                Interactive NRQL &amp; Observability Query Console
-              </h3>
-              <span class="badge badge-info">Live Query Runner</span>
-            </div>
-            <label for="select-query-engine" style="font-size:12px; color:var(--text-secondary);">Telemetry Engine &amp; Preset Query:</label>
-            <div style="display:flex; gap:8px; margin-top:4px; margin-bottom:8px; flex-wrap:wrap;">
-              <select class="console-select" id="select-query-engine" style="width:auto; flex:1; margin:0;" onchange="loadPresetQuery()">
-                <option value="newrelic_nrql">New Relic NerdGraph (NRQL APM &amp; AI Monitoring)</option>
-                <option value="datadog_spans">Datadog LLM Observability Spans Query</option>
-                <option value="substrate_graph">Microsoft Substrate Low-Value Signal Graph Query</option>
-                <option value="soluble_policy">Soluble IaC Security Policy Query</option>
-              </select>
-              <button class="btn btn-primary btn-sm" id="btn-run-nrql" onclick="executeObservabilityQuery()">
-                Execute Query
-              </button>
-            </div>
-            <input type="text" class="console-input" id="input-observability-query" value="SELECT apdex(duration, t: 0.08), percentile(duration, 95), percentage(count(*), WHERE error IS true) FROM Transaction FACET appName, releaseId, llmContributor SINCE 7 days ago" />
-            <div id="nrql-query-insight" style="font-size:12px; color:var(--accent-emerald); margin-bottom:8px;"></div>
-            <div class="table-wrap" style="max-height:220px; overflow-y:auto;">
-              <table class="telemetry-table" id="table-nrql-results">
-                <thead id="thead-nrql-results"></thead>
-                <tbody id="tbody-nrql-results"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PILLAR 4: SOLUBLE -->
-      <section class="section-card vendor-section" id="vendor-sec-soluble">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">4. Soluble Cloud-Native IaC &amp; DevSecOps Security (`api.soluble.io`)</h2>
-            <p class="section-desc">Automated Terraform, Kubernetes, Helm, Dockerfile &amp; Secrets scanning across PRs and CI/CD pipelines with Claude/Gemini auto-remediation attribution.</p>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn btn-sm" id="btn-test-soluble" onclick="testSingleConnectorUI('soluble')">Test Soluble Connection</button>
-            <span class="badge badge-emerald">soluble-cli v4.12.0 · 96.4% AI PR Pass Rate</span>
-          </div>
-        </div>
-
-        <div class="dual-grid">
-          <div class="console-box">
-            <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--accent-emerald);">
-              Soluble IaC Security Posture by Framework (30d)
-            </h3>
-            <div class="table-wrap">
-              <table class="telemetry-table">
-                <thead>
-                  <tr>
-                    <th>IaC Framework</th>
-                    <th>Scans (30d)</th>
-                    <th>Findings</th>
-                    <th>AI Auto-Fixed</th>
-                    <th>Compliance Score</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-soluble-frameworks"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Interactive Live Soluble IaC & PR Security Scanner -->
-          <div class="console-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <h3 style="font-size:14px; font-weight:700; color:var(--accent-cyan);">
-                Interactive Soluble IaC &amp; PR Auto-Remediation Scanner
-              </h3>
-              <div style="display:flex; gap:6px;">
-                <button class="btn btn-sm" onclick="loadSolubleSample('terraform')">Load Terraform Sample</button>
-                <button class="btn btn-sm" onclick="loadSolubleSample('k8s')">Load K8s Sample</button>
-              </div>
-            </div>
-            <div style="display:flex; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
-              <select class="console-select" id="soluble-iac-type" style="width:auto; flex:1; margin:0;">
-                <option value="Terraform">Terraform (.tf)</option>
-                <option value="Kubernetes">Kubernetes / Helm (.yaml)</option>
-                <option value="Dockerfile">Dockerfile / Jenkinsfile</option>
-              </select>
-              <select class="console-select" id="soluble-llm-author" style="width:auto; flex:1; margin:0;">
-                <option value="Claude 3.7 Sonnet">Author: Claude 3.7 Sonnet</option>
-                <option value="Gemini 2.5 Pro">Author: Gemini 2.5 Pro</option>
-                <option value="Human Engineer">Author: Human Engineer</option>
-              </select>
-              <button class="btn btn-primary btn-sm" id="btn-run-soluble-scan" onclick="runSolubleInteractiveScan()">
-                Run Soluble Scan &amp; Auto-Fix
-              </button>
-            </div>
-            <textarea class="console-textarea" id="soluble-code-input">resource "aws_iam_role_policy" "settlement_s3" {
-  name = "settlement-wildcard-policy"
-  policy = jsonencode({
-    Effect   = "Allow"
-    Action   = "*"
-    Resource = "arn:aws:s3:::burniq-settlement-ledger/*"
-  })
-}
-resource "aws_db_instance" "ledger_db" {
-  engine              = "postgres"
-  encrypted           = false
-  publicly_accessible = true
-}</textarea>
-            <div id="soluble-scan-results"></div>
-          </div>
-        </div>
-
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px;">Soluble PR &amp; CI/CD Security Findings (`GET /api.soluble.io/api/v1/findings`)</h3>
-        <div class="table-wrap">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Finding / Rule ID</th>
-                <th>Severity</th>
-                <th>IaC Type</th>
-                <th>Finding Title &amp; Repo / Branch</th>
-                <th>Commit &amp; CI Pipeline</th>
-                <th>Author &amp; AI Attribution</th>
-                <th>Policy Framework</th>
-                <th>Status &amp; MTTR</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-soluble-findings"></tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-
-    <!-- TAB 2: CODE-TO-RELEASE ATTRIBUTION -->
-    <div class="tab-panel" id="tab-attribution">
-      <section class="section-card">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">End-to-End Code-to-Release Attribution Pipeline</h2>
-            <p class="section-desc">Traces Claude &amp; Gemini prompts through Git commits, branches, PRs, CI/CD releases (GitHub, GitLab, Bitbucket, Jenkins, Bamboo), Jira epics, ServiceNow CHGs, Datadog DORA, New Relic APM, Soluble SecOps, and Salesforce ARR.</p>
-          </div>
-          <a class="btn btn-primary btn-sm" href="/api/csv/export/observability" download>Export Release Attribution CSV</a>
-        </div>
-        <div class="table-wrap">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Release ID &amp; Name</th>
-                <th>SCM &amp; CI/CD</th>
-                <th>Commit · Jira · CHG</th>
-                <th>Lead Engineer (Workday)</th>
-                <th>LLM Models &amp; Spend</th>
-                <th>AI Code %</th>
-                <th>Workday Salary Saved</th>
-                <th>Salesforce ARR</th>
-                <th>Datadog DORA Impact</th>
-                <th>New Relic APM</th>
-                <th>Soluble SecOps Gate</th>
-                <th>ROI</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-attribution"></tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-
-    <!-- TAB 3: LOW-VALUE TASK & SUBSTRATE AUDIT -->
-    <div class="tab-panel" id="tab-low-value">
-      <section class="section-card">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">Low-Value Task &amp; Microsoft Substrate Communication Audit</h2>
-            <p class="section-desc">Identifies LLM token and Workday salary burn on routine internal emails, passive meeting notes, and status formatting vs. shipped production code.</p>
-          </div>
-          <a class="btn btn-primary btn-sm" href="/api/csv/export/substrate" download>Export Low-Value Audit CSV</a>
-        </div>
-        <div class="table-wrap">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Signal ID &amp; Substrate Channel</th>
-                <th>Task / Artifact Type</th>
-                <th>Department</th>
-                <th>Model Used</th>
-                <th>Monthly Prompts &amp; Tokens</th>
-                <th>LLM Spend</th>
-                <th>Workday Salary Burn</th>
-                <th>Jira/Git Attribution</th>
-                <th>Audit Status</th>
-                <th>One-Click Remediation</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-low-value-audit"></tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-
-    <!-- TAB 4: WORKDAY SALARY ROI & ERP FINANCIALS -->
-    <div class="tab-panel" id="tab-workday-roi">
-      <section class="section-card">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">Workday HRM Salary ROI &amp; Multi-ERP Financial Reconciliation</h2>
-            <p class="section-desc">Reconciles department compensation bands from Workday HRM with SAP S/4HANA, Sage Intacct, Oracle NetSuite, Salesforce ARR, and Power BI semantic models.</p>
-          </div>
-          <a class="btn btn-primary btn-sm" href="/api/csv/export/workday_roi" download>Export Workday ROI CSV</a>
-        </div>
-        <div class="table-wrap">
-          <table class="telemetry-table">
-            <thead>
-              <tr>
-                <th>Department</th>
-                <th>Workday Cost Center &amp; ERP</th>
-                <th>Headcount &amp; Hourly Loaded Rate</th>
-                <th>Claude Spend</th>
-                <th>Gemini Spend</th>
-                <th>High-Value Code %</th>
-                <th>Low-Value Email/Notes %</th>
-                <th>Releases Shipped (30d)</th>
-                <th>Engineering Hours Saved</th>
-                <th>Net Workday Salary ROI</th>
-                <th>ROI Multiple</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-workday-roi"></tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-
-    <!-- TAB 5: ENTERPRISE CONNECTORS & CSV STUDIO -->
-    <div class="tab-panel" id="tab-connectors">
-      <section class="section-card">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">Live Enterprise Telemetry Connectors (Port 8000 &amp; Port 8090 Mock Enterprise Sandbox)</h2>
-            <p class="section-desc">Test live API handshakes against Datadog, Substrate, New Relic, Soluble, Workday, SAP, Sage, NetSuite, Salesforce, Power BI, GitHub, GitLab, Bitbucket, Jenkins, Bamboo, Jira, ServiceNow, Zendesk, PagerDuty, and Opsgenie.</p>
-          </div>
-          <button class="btn btn-primary" id="btn-test-all-connectors" onclick="verifyAllConnectorsBanner()">
-            Test All 23 Enterprise Connectors
+        <div class="view-controls-group">
+          <button type="button" class="btn btn-emerald" id="btn-train-rag-adapter">
+            <span>Calibrate &amp; Train Flash-Lite RAG Adapter</span>
           </button>
         </div>
+      </div>
 
-        <div id="connector-test-output" class="console-box" style="display:none;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <strong id="connector-test-title" style="color:var(--accent-emerald);">Connector Live Handshake Response</strong>
-            <button class="btn btn-sm" onclick="document.getElementById('connector-test-output').style.display='none'">Close</button>
-          </div>
-          <pre class="code-pre" id="connector-test-json"></pre>
-        </div>
+      <div class="rag-studio-layout">
+        <!-- LEFT COLUMN: ROBUST HYBRID ENTERPRISE SEARCH -->
+        <div class="studio-column">
+          <div class="chart-panel">
+            <div class="chart-header">
+              <div>
+                <h2 class="chart-title">Enterprise Hybrid Search (BM25 Lexical + Dense Vector Cosine)</h2>
+                <p class="chart-subtitle" id="search-index-status-line">Searching across 28 RAG chunks &amp; live telemetry records from active (ON) connectors</p>
+              </div>
+              <span class="code-badge" id="search-latency-badge">1.8 ms</span>
+            </div>
 
-        <div class="connector-grid" id="connectors-grid"></div>
-      </section>
+            <div class="search-box-row">
+              <input
+                type="search"
+                id="search-query-input"
+                class="input-control"
+                placeholder="Search commits, Jira epics, Workday ROI, ServiceNow P1s, Flash-Lite savings, low-value email audits..."
+                value=""
+              />
+              <button type="button" class="btn btn-amber" id="btn-run-search">Search</button>
+            </div>
 
-      <!-- CSV Ingestion & Export Studio -->
-      <section class="section-card">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">Enterprise CSV Telemetry Import &amp; Export Studio</h2>
-            <p class="section-desc">Ingest custom CSV logs from Datadog, Substrate, New Relic, Soluble, or Workday HRM, or export audited datasets.</p>
+            <div class="search-filters-row">
+              <select id="search-filter-persona" class="select-control" aria-label="Filter Search by Persona">
+                <option value="all">All Personas</option>
+                <option value="techops">Technical Ops &amp; SRE</option>
+                <option value="developers">Developers</option>
+                <option value="managers">Managers</option>
+                <option value="csuite">C-Suite Executive</option>
+              </select>
+
+              <select id="search-filter-type" class="select-control" aria-label="Filter Search by Source Type">
+                <option value="all">All Artifact Types</option>
+                <option value="rag_knowledge">RAG Architecture &amp; Runbooks</option>
+                <option value="workday_roi">Workday Salary ROI</option>
+                <option value="code_commit">Git Commits &amp; PRs</option>
+                <option value="ci_release">Jenkins / Bamboo Releases</option>
+                <option value="jira_sprint">Jira Sprints &amp; Epics</option>
+                <option value="incident_ops">ServiceNow &amp; Zendesk Ops</option>
+                <option value="finops_sap">SAP &amp; Salesforce FinOps</option>
+                <option value="low_value_audit">Low-Value Email/Notes Audit</option>
+              </select>
+
+              <select id="search-filter-sort" class="select-control" aria-label="Sort Search Results">
+                <option value="hybrid">Sort: Hybrid Score (BM25 + Vector)</option>
+                <option value="semantic">Sort: Semantic Vector Cosine</option>
+                <option value="bm25">Sort: Lexical BM25</option>
+                <option value="recent">Sort: Most Recent</option>
+              </select>
+
+              <label class="rag-checkbox-label" for="chk-search-active-only">
+                <input type="checkbox" id="chk-search-active-only" checked />
+                <span>Only Active (ON) Connections</span>
+              </label>
+            </div>
+
+            <div id="search-excluded-banner" style="display:none;font-size:0.78rem;padding:0.5rem 0.75rem;border-radius:6px;background:var(--accent-amber-soft);color:var(--accent-amber);"></div>
+
+            <div class="search-results-list" id="search-results-container">
+              <!-- Populated dynamically -->
+            </div>
           </div>
-        </div>
-        <div class="dual-grid">
-          <div class="console-box">
-            <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">Import Telemetry CSV Payload</h3>
-            <textarea class="console-textarea" id="csv-import-textarea">trace_id,vendor,service,model,task_category,tokens,cost_usd,release_id
-dd-custom-01,Datadog,payments-ledger-svc,claude-3-7-sonnet,High-Value Code/Release,19400,0.098,REL-2026.11.04-GH
-sub-custom-02,Substrate,substrate-mail-graph,claude-3-opus,Low-Value Email/Notes,14200,0.410,UNATTRIBUTED
-nr-custom-03,New Relic,checkout-orchestrator,gemini-2.5-pro,High-Value Code/Release,28100,0.074,REL-2026.11.03-GL
-sol-custom-04,Soluble,burniq-payments-infra,claude-3-7-sonnet,IaC Auto-Remediation,11200,0.056,REL-2026.11.04-GH</textarea>
-            <button class="btn btn-primary btn-sm" id="btn-import-csv" onclick="submitCsvImport()">
-              Ingest CSV Records
-            </button>
-            <div id="csv-import-result" style="margin-top:10px;"></div>
-          </div>
-          <div class="console-box">
-            <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">One-Click Audited CSV Exports</h3>
-            <p style="font-size:12.5px; color:var(--text-secondary); margin-bottom:12px;">
-              Download RFC 4180 compliant CSV extracts for boardroom reporting, Power BI ingestion, or ERP reconciliation:
-            </p>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <a class="btn" href="/api/csv/export/datadog" download>1. Download Datadog LLM Observability &amp; DORA Spans (.csv)</a>
-              <a class="btn" href="/api/csv/export/substrate" download>2. Download Substrate M365 Email/Notes Low-Value Audit (.csv)</a>
-              <a class="btn" href="/api/csv/export/newrelic" download>3. Download New Relic APM Golden Signals &amp; AI Monitoring (.csv)</a>
-              <a class="btn" href="/api/csv/export/soluble" download>4. Download Soluble Cloud-Native IaC Security Findings (.csv)</a>
-              <a class="btn" href="/api/csv/export/observability" download>5. Download Unified Code-to-Release Attribution (.csv)</a>
-              <a class="btn" href="/api/csv/export/workday_roi" download>6. Download Workday HRM &amp; ERP Department ROI (.csv)</a>
+
+          <!-- CUSTOM RAG INGESTION & TRAINING PANEL -->
+          <div class="chart-panel">
+            <div class="chart-header">
+              <div>
+                <h2 class="chart-title">Custom RAG Ingestion &amp; Flash 3-8 Fast Lite Adapter Training</h2>
+                <p class="chart-subtitle">Ingest new runbooks, architecture docs, or CSV datasets directly into the vector index and re-calibrate the lightweight RAG adapter.</p>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
+              <input type="text" id="ingest-doc-title" class="input-control" placeholder="Document Title (e.g., Q4 Cloud FinOps Runbook)" />
+              <select id="ingest-doc-connection" class="select-control" aria-label="Source Service Connection">
+                <option value="conn-gemini-flash-lite">Google Flash 3-8 Fast Lite Gateway</option>
+                <option value="conn-github-ent">GitHub Enterprise Cloud</option>
+                <option value="conn-workday">Workday HRM &amp; Payroll</option>
+                <option value="conn-servicenow">ServiceNow ITSM</option>
+                <option value="conn-jira">Atlassian Jira Software</option>
+                <option value="conn-sap-erp">SAP S/4HANA FinOps</option>
+                <option value="conn-powerbi">Power BI &amp; CSV Ingestion</option>
+              </select>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
+              <select id="ingest-doc-department" class="select-control" aria-label="Department">
+                <option value="Data & AI Platform">Data &amp; AI Platform</option>
+                <option value="Platform & Technical Ops">Platform &amp; Technical Ops</option>
+                <option value="Core Product Engineering">Core Product Engineering</option>
+                <option value="Enterprise Systems & FinOps">Enterprise Systems &amp; FinOps</option>
+                <option value="Customer Operations & Support">Customer Operations &amp; Support</option>
+              </select>
+              <select id="ingest-chunk-strategy" class="select-control" aria-label="Chunking Strategy">
+                <option value="semantic">Semantic Paragraph Chunking</option>
+                <option value="fixed_window">Fixed 512-Token Window</option>
+                <option value="csv_rows">CSV Row-Record Chunking</option>
+              </select>
+            </div>
+
+            <textarea
+              id="ingest-doc-content"
+              class="textarea-control"
+              rows="3"
+              placeholder="Paste enterprise runbook markdown, telemetry notes, or CSV rows to index into Google Flash 3-8 Fast Lite RAG..."
+            ></textarea>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+              <span style="font-size:0.76rem;color:var(--text-muted);" id="rag-training-status-text">
+                Adapter: <code>burniq-flash-3-8-fast-lite-rag-v2.4</code> · Recall@5: <strong>94.6%</strong>
+              </span>
+              <button type="button" class="btn btn-emerald" id="btn-ingest-rag-doc">Ingest &amp; Index into RAG</button>
             </div>
           </div>
         </div>
-      </section>
-    </div>
+
+        <!-- RIGHT COLUMN: GOOGLE FLASH 3-8 FAST LITE RAG ASSISTANT -->
+        <div class="studio-column">
+          <div class="chart-panel">
+            <div class="chart-header">
+              <div>
+                <h2 class="chart-title">Customized RAG-Trained LLM Assistant (Google Flash 3-8 Fast Lite)</h2>
+                <p class="chart-subtitle">Grounded synthesis with inline <code>[DOC-xxx]</code> citations, live SQLite telemetry, and 96.8% lower token cost than heavyweight frontier models.</p>
+              </div>
+              <span class="nav-badge" id="llm-active-tier-badge">$0.035 / 1M Tokens</span>
+            </div>
+
+            <!-- Model & Persona Selectors -->
+            <div style="display:grid;grid-template-columns:1.3fr 1fr 0.7fr;gap:0.6rem;">
+              <select id="llm-model-select" class="select-control" aria-label="Select LLM Model">
+                <option value="google/gemini-3-8-flash-lite" selected>Google Flash 3-8 Fast Lite (RAG-Tuned · $0.035/1M)</option>
+                <option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash ($0.15/1M)</option>
+                <option value="google/gemini-2.5-pro">Google Gemini 2.5 Pro ($1.25/1M)</option>
+                <option value="anthropic/claude-3.5-haiku">Anthropic Claude 3.5 Haiku ($0.80/1M)</option>
+                <option value="anthropic/claude-3.7-sonnet">Anthropic Claude 3.7 Sonnet ($3.00/1M)</option>
+              </select>
+
+              <select id="llm-persona-select" class="select-control" aria-label="Select Target Persona Lens">
+                <option value="csuite" selected>Lens: C-Suite Executive (ROI &amp; FinOps)</option>
+                <option value="techops">Lens: Technical Ops &amp; SRE</option>
+                <option value="developers">Lens: Developers &amp; Architects</option>
+                <option value="managers">Lens: Engineering Managers</option>
+              </select>
+
+              <select id="llm-topk-select" class="select-control" aria-label="Top-K RAG Chunks">
+                <option value="3">Top-3 Chunks</option>
+                <option value="5" selected>Top-5 Chunks</option>
+                <option value="8">Top-8 Chunks</option>
+              </select>
+            </div>
+
+            <!-- Preset Domain Prompt Chips -->
+            <div class="prompt-chips-row">
+              <button type="button" class="prompt-chip" data-prompt="Summarize our Net Enterprise ROI comparing Workday payroll value against SAP AI spend and Google Flash 3-8 Fast Lite savings.">
+                C-Suite: Workday ROI &amp; Flash-Lite Savings
+              </button>
+              <button type="button" class="prompt-chip" data-prompt="Analyze low-value email and meeting note LLM waste across departments and how routing to Google Flash 3-8 Fast Lite cuts spend.">
+                Managers: Low-Value Email/Notes Audit
+              </button>
+              <button type="button" class="prompt-chip" data-prompt="Trace our code-to-release attribution across GitHub, GitLab, Bitbucket commits, Jenkins/Bamboo CI builds, and Jira story points.">
+                Developers: Code-to-Release Lineage
+              </button>
+              <button type="button" class="prompt-chip" data-prompt="Show Technical Ops health across active service connections, P95 latency for Flash 3-8 Fast Lite, and ServiceNow P1 MTTR.">
+                TechOps: Connector Health &amp; P1 MTTR
+              </button>
+            </div>
+
+            <!-- Prompt Input Row -->
+            <div class="search-box-row">
+              <input
+                type="text"
+                id="llm-prompt-input"
+                class="input-control"
+                placeholder="Ask Google Flash 3-8 Fast Lite about any service connection, Workday ROI, commit lineage, or RAG doc..."
+                value="Summarize our Net Enterprise ROI comparing Workday payroll value against SAP AI spend and Google Flash 3-8 Fast Lite savings."
+              />
+              <button type="button" class="btn btn-emerald" id="btn-ask-flash-lite">Ask Flash-Lite</button>
+            </div>
+
+            <!-- Live LLM Response Box -->
+            <div class="llm-chat-response-box" id="llm-response-container">
+              <!-- Populated dynamically -->
+            </div>
+
+            <!-- Inference FinOps & Latency Telemetry Bar -->
+            <div class="llm-telemetry-bar" id="llm-telemetry-bar">
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">Model &amp; Adapter</span>
+                <span class="conn-metric-val" id="tel-model-name">Flash 3-8 Lite</span>
+              </div>
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">Total Latency</span>
+                <span class="conn-metric-val" id="tel-latency">98 ms</span>
+              </div>
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">Tokens (In/RAG/Out)</span>
+                <span class="conn-metric-val" id="tel-tokens">84 / 720 / 310</span>
+              </div>
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">Inference Cost</span>
+                <span class="conn-metric-val" id="tel-cost" style="color:var(--accent-emerald);">$0.000052</span>
+              </div>
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">vs Frontier Model</span>
+                <span class="conn-metric-val" id="tel-savings" style="color:var(--accent-amber);">97.4% Saved</span>
+              </div>
+            </div>
+
+            <!-- Retrieved Citations List -->
+            <div style="margin-top:0.5rem;">
+              <h3 style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:0.45rem;">
+                Retrieved RAG Context Chunks (Active Service Connections)
+              </h3>
+              <div id="llm-citations-container" style="display:flex;flex-direction:column;gap:0.45rem;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <script src="/static/app.js"></script>
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>

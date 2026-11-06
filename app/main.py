@@ -509,7 +509,7 @@ def api_erp_crm() -> Dict[str, Any]:
     }
 
 
-from backend.main import (
+from backend.observability_api import (
     ObservabilityQueryRequest,
     SolubleScanRequest,
     SubstratePolicyRequest,
