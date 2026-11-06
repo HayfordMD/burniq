@@ -1,22 +1,19 @@
-# BurnIQ — Enterprise LLM Telemetry, Sage & Oracle NetSuite ERP & Workday Salary ROI Platform
+# BurnIQ — Enterprise AI Telemetry, Incident Response & ROI Platform
 
-**BurnIQ** attributes corporate LLM usage (**Anthropic Claude** & **Google Cloud Vertex AI Gemini**) across engineering source control (**GitHub**, **GitLab**, **Bitbucket**), CI/CD release pipelines (**Jenkins**, **Bamboo**), agile & ITSM workflows (**Jira**, **ServiceNow**, **Zendesk**), observability & security (**Datadog**, **Substrate**, **New Relic**, **Soluble**, **PagerDuty**, **Opsgenie**), employee compensation (**Workday HCM**), and enterprise financial ledgers (**Sage Intacct / Sage X3**, **Oracle NetSuite OneWorld & SuiteQL**, **SAP S/4HANA**, **Salesforce Revenue Cloud**, and **Microsoft Power BI**).
+**BurnIQ** correlates corporate **Anthropic Claude** & **Google Gemini** token consumption against engineering velocity, incident MTTR savings (**PagerDuty** & **Opsgenie / Genie**), CI/CD release impact, Workday HRM compensation, ERP/CRM financial ledgers, and low-value task overhead.
 
----
+## Key Capabilities
 
-## Core Enterprise Capabilities
+1. **PagerDuty (`api.pagerduty.com` & `events.pagerduty.com/v2/enqueue`)**:
+   - Real-time incident lifecycle management (`triggered` -> `acknowledged` -> `resolved`).
+   - Events v2 API support for automated alert triggers, acknowledgments, and resolutions.
+   - Escalation policies, on-call schedules (`PD-SCH-01`..`04`), service directory (`PD-SVC-01`..`04`), and automated event orchestration rules (`PD-RULE-01`..`04`).
+   - AI remediation correlation showing Claude & Gemini root-cause analysis and MTTR hours/salary saved.
 
-### 1. Sage Intacct, Sage X3 & Sage 300 ERP Integration (`/api/erp/sage`)
-- **Multi-Entity General Ledger Consolidation**:
-  - `E100` — *BurnIQ North America Inc.* (Sage Intacct Multi-Entity, USD)
-  - `E200` — *BurnIQ EMEA Operations Ltd.* (Sage X3 Enterprise, EUR)
-  - `E300` — *BurnIQ APAC Pte. Ltd.* (Sage 300 Cloud, SGD)
-- **ASC 350-40 / IAS 38 Software Development Capitalization**:
-  - Automatically maps verified engineering token spend + Workday loaded engineering hours from shipped Git/CI-CD releases into **Sage GL Account `1650-01` (Capitalized AI R&D)** vs **`6120-01` (Production AI OpEx)** and **`6120-02` (Low-Value Email/Notes SG&A Waste)**.
-- **3-Way Matched AP Vendor Bills**:
-  - Reconciles monthly Anthropic PBC and Google Cloud Vertex AI invoices against granular developer token telemetry.
-- **Live GL Batch Creation & CSV Export**:
-  - Create and post balanced Sage Intacct GL Batches (`POST /api/erp/sage/gl-batch`) and export Sage Intacct-compatible CSV batches (`GET /api/export/sage`).
+2. **Opsgenie / Genie (`api.opsgenie.com` & `/api/genie/*`)**:
+   - Full Alert API v2 lifecycle (`open`, `acknowledged`, `snoozed`, `closed`, `escalate`) with bi-directional PagerDuty incident mirroring.
+   - Responder routing teams (`team-sre-core`, `team-llm-platform`, `team-finops-erp`, `team-secops`) and on-call rotations (`OG-SCH-01`..`04`).
+   - Active heartbeat monitoring (`claude-anthropic-enterprise-hb`, `gemini-vertex-telemetry-hb`, `cicd-release-correlator-hb`, `workday-netsuite-sage-roi-hb`, `datadog-newrelic-soluble-bridge-hb`) with live ping support.
 
 ### 2. Oracle NetSuite OneWorld & SuiteQL Integration (`/api/erp/netsuite`)
 - **OneWorld Multi-Subsidiary Hierarchy**:

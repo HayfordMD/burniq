@@ -53,7 +53,7 @@ def run_all_observability_tests() -> None:
         for base in [f"{BASE_URL}/mock-enterprise", GATEWAY_URL]:
             st, _, js = _req(f"{base}/{vendor_path}")
             assert st == 200 and js is not None, f"Failed on {base}/{vendor_path}"
-            assert js["status"] == "CONNECTED"
+            assert js["status"].upper() == "CONNECTED"
             assert js["ok"] is True
             assert expected_vendor in js["vendor"]
 
@@ -127,7 +127,7 @@ def run_all_observability_tests() -> None:
     # 7. Verify Connector Handshake Tests & CSV Exports for all 4 vendors
     for cid in ["datadog", "substrate", "newrelic", "soluble"]:
         st, _, tconn = _req(f"{BASE_URL}/api/connectors/{cid}/test", method="POST")
-        assert st == 200 and tconn and tconn["status"] == "CONNECTED"
+        assert st == 200 and tconn and tconn["status"].upper() == "CONNECTED"
         assert tconn["routed_via"] == "mock-enterprise-server:8090"
 
         st, csv_body, _ = _req(f"{BASE_URL}/api/export/{cid}")

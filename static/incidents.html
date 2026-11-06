@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BurnIQ — Enterprise LLM Telemetry, PagerDuty & Opsgenie ROI Platform</title>
+  <style>
+    :root {
+      --bg-base: #070b14;
+      --bg-surface: #0f1626;
+      --bg-elevated: #162038;
+      --bg-glass: rgba(22, 32, 56, 0.78);
+      --border: #233253;
+      --border-bright: #354c7c;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --pd-green: #06ac38;
+      --pd-green-soft: rgba(6, 172, 56, 0.16);
+      --og-blue: #2684ff;
+      --og-blue-soft: rgba(38, 132, 255, 0.16);
+      --claude-amber: #f59e0b;
+      --gemini-cyan: #06b6d4;
+      --danger: #ef4444;
+      --warning: #f97316;
+      --success: #10b981;
+      --purple: #8b5cf6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at 15% 0%, #101c38 0%, var(--bg-base) 55%);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Top Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 11, 20, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #06ac38 0%, #2684ff 55%, #f59e0b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(38, 132, 255, 0.35);
+    }
+
+    .brand-title h1 {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .status-pills {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+    }
+
+    .pill.pd {
+      border-color: rgba(6, 172, 56, 0.5);
+      background: var(--pd-green-soft);
+      color: #4ade80;
+    }
+
+    .pill.og {
+      border-color: rgba(38, 132, 255, 0.5);
+      background: var(--og-blue-soft);
+      color: #60a5fa;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button, .btn {
+      cursor: pointer;
+      border: 1px solid var(--border-bright);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    button:hover, .btn:hover {
+      border-color: #60a5fa;
+      transform: translateY(-1px);
+    }
+
+    .btn-pd {
+      background: linear-gradient(135deg, #058a2d, #06ac38);
+      border-color: #22c55e;
+      color: #fff;
+    }
+
+    .btn-og {
+      background: linear-gradient(135deg, #1d4ed8, #2684ff);
+      border-color: #60a5fa;
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 4px 9px;
+      font-size: 11px;
+      border-radius: 6px;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 14px 28px 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 22, 38, 0.6);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      border-radius: 8px 8px 0 0;
+      padding: 10px 16px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      transform: none;
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      background: var(--bg-elevated);
+      border-bottom-color: #38bdf8;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 24px 28px 60px;
+    }
+
+    /* KPI Strip */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card.pd-accent {
+      border-left: 4px solid var(--pd-green);
+    }
+
+    .kpi-card.og-accent {
+      border-left: 4px solid var(--og-blue);
+    }
+
+    .kpi-card.llm-accent {
+      border-left: 4px solid var(--claude-amber);
+    }
+
+    .kpi-card.roi-accent {
+      border-left: 4px solid var(--gemini-cyan);
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      font-weight: 700;
+    }
+
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 6px 0 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Dual Grid for PagerDuty & Opsgenie */
+    .dual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1200px) {
+      .dual-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 22px;
+    }
+
+    .panel-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-p1, .badge-critical, .badge-triggered, .badge-open {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+    }
+
+    .badge-p2, .badge-warning, .badge-acknowledged, .badge-acked {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+    }
+
+    .badge-p3, .badge-snoozed {
+      background: rgba(56, 189, 248, 0.2);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+    }
+
+    .badge-resolved, .badge-closed, .badge-healthy, .badge-connected {
+      background: rgba(16, 185, 129, 0.18);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .badge-claude {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .badge-gemini {
+      background: rgba(6, 182, 212, 0.18);
+      color: #22d3ee;
+      border: 1px solid rgba(6, 182, 212, 0.4);
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--text-secondary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(22, 32, 56, 0.5);
+    }
+
+    tr:hover td {
+      background: rgba(38, 132, 255, 0.04);
+    }
+
+    /* Inline Form Bar */
+    .form-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      background: rgba(22, 32, 56, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 16px;
+      align-items: end;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      background: var(--bg-base);
+      border: 1px solid var(--border-bright);
+      color: var(--text-primary);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    /* Connectors Grid */
+    .connector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 14px;
+    }
+
+    .connector-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .connector-card.highlight-pd {
+      border-color: var(--pd-green);
+      box-shadow: 0 0 16px rgba(6, 172, 56, 0.14);
+    }
+
+    .connector-card.highlight-og {
+      border-color: var(--og-blue);
+      box-shadow: 0 0 16px rgba(38, 132, 255, 0.14);
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11.5px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      background: #0f172a;
+      border: 1px solid #38bdf8;
+      color: #f8fafc;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 100;
+    }
+
+    .tab-section {
+      display: none;
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP COMMAND BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">BIQ</div>
+      <div class="brand-title">
+        <h1>
+          BurnIQ Enterprise Telemetry & ROI
+          <span class="badge badge-connected">v2.6 PagerDuty + Opsgenie</span>
+        </h1>
+        <p>Corporate LLM Usage (Claude & Gemini) • Code, Commits & CI/CD Releases • PagerDuty & Opsgenie Incident ROI • Workday, SAP, Sage, NetSuite, Jira, ServiceNow, Zendesk, Datadog, Substrate, New Relic, Soluble</p>
+      </div>
+    </div>
+
+    <div class="status-pills">
+      <span class="pill pd" id="pill-pagerduty">
+        <span class="dot"></span>
+        PagerDuty (api.pagerduty.com): <strong id="pd-pill-text">Connected</strong>
+      </span>
+      <span class="pill og" id="pill-opsgenie">
+        <span class="dot"></span>
+        Opsgenie / Genie (api.opsgenie.com): <strong id="og-pill-text">Connected</strong>
+      </span>
+      <span class="pill">
+        <span class="dot"></span>
+        Connectors: <strong id="connectors-pill-count">22/22 Live</strong>
+      </span>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn-pd" onclick="quickTriggerPagerDuty()">+ Trigger PagerDuty Incident</button>
+      <button class="btn-og" onclick="quickCreateOpsgenieAlert()">+ Create Opsgenie Alert</button>
+      <button onclick="syncAllSystems()">↻ Sync PagerDuty & Genie</button>
+      <a class="btn" href="/api/csv/export" download="burniq_pagerduty_opsgenie_roi.csv">⬇ Export ROI CSV</a>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs" id="main-tabs">
+    <button class="tab-btn active" data-tab="tab-pd-genie" onclick="switchTab('tab-pd-genie')">
+      🚨 PagerDuty & Opsgenie ("Genie") Command Center
+    </button>
+    <button class="tab-btn" data-tab="tab-connectors" onclick="switchTab('tab-connectors')">
+      🔌 All 22 Enterprise Connectors & Gateways
+    </button>
+    <button class="tab-btn" data-tab="tab-cicd-code" onclick="switchTab('tab-cicd-code')">
+      🚀 Code, Commits, Branches & CI/CD Releases
+    </button>
+    <button class="tab-btn" data-tab="tab-workday-erp" onclick="switchTab('tab-workday-erp')">
+      💼 Workday Salaries, ERP/CRM (SAP, Sage, NetSuite) & Low-Value Email Audit
+    </button>
+  </nav>
+
+  <main class="container">
+    <!-- EXECUTIVE KPI STRIP (Always Visible) -->
+    <section class="kpi-grid">
+      <div class="kpi-card pd-accent">
+        <div class="kpi-label">PagerDuty Incident MTTR & ROI</div>
+        <div class="kpi-value" id="kpi-pd-mttr">14.1m (-76.8%)</div>
+        <div class="kpi-sub" id="kpi-pd-sub">5 Incidents • $13,407.89 Net SLA & Salary ROI</div>
+      </div>
+      <div class="kpi-card og-accent">
+        <div class="kpi-label">Opsgenie ("Genie") Auto-Triage & Heartbeats</div>
+        <div class="kpi-value" id="kpi-og-triage">100% LLM Triaged</div>
+        <div class="kpi-sub" id="kpi-og-sub">5 Alerts • 1.12m Avg MTTA • 5/5 Heartbeats Healthy</div>
+      </div>
+      <div class="kpi-card llm-accent">
+        <div class="kpi-label">Claude & Gemini Enterprise Token Burn</div>
+        <div class="kpi-value" id="kpi-llm-tokens">56.8M Tokens</div>
+        <div class="kpi-sub" id="kpi-llm-sub">$961.40 Total Spend • 83.0% High-Value Utilization</div>
+      </div>
+      <div class="kpi-card roi-accent">
+        <div class="kpi-label">Workday HRM Net Salary ROI</div>
+        <div class="kpi-value" id="kpi-workday-roi">$41,075.22</div>
+        <div class="kpi-sub" id="kpi-workday-sub">278.5 Coding Hrs + 119.5 On-Call MTTR Hrs Saved</div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- TAB 1: PAGERDUTY & OPSGENIE ("GENIE") COMMAND CENTER              -->
+    <!-- ================================================================ -->
+    <div id="tab-pd-genie" class="tab-section active">
+
+      <div class="dual-grid">
+        <!-- PAGERDUTY PANEL -->
+        <div class="panel" style="margin-bottom:0;">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="badge" style="background:var(--pd-green);color:#fff;">PagerDuty v2</span>
+              <span>PagerDuty Incident Management & Events API v2 (`api.pagerduty.com`)</span>
+            </div>
+            <div>
+              <button class="btn-sm" onclick="testSingleConnector('pagerduty')">Test api.pagerduty.com</button>
+            </div>
+          </div>
+
+          <!-- Trigger PagerDuty Form -->
+          <div class="form-bar">
+            <div class="form-group">
+              <label for="pd-title-input">Incident Summary / Title</label>
+              <input id="pd-title-input" type="text" value="[P1] Production LLM Token Gateway Timeout Spike" />
+            </div>
+            <div class="form-group">
+              <label for="pd-priority-input">Priority & Service</label>
+              <select id="pd-priority-input">
+                <option value="P1">P1 — Critical (Core Payments / LLM GW)</option>
+                <option value="P2" selected>P2 — High (Substrate / ERP Sync)</option>
+                <option value="P3">P3 — Medium (FinOps Email Waste)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pd-llm-input">Remediation Copilot</label>
+              <select id="pd-llm-input">
+                <option value="Claude">Claude 3.7 Sonnet (Code + Hotfix PR)</option>
+                <option value="Gemini">Gemini 2.5 Pro (2M Context Log Triage)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <button class="btn-pd" style="width:100%;justify-content:center;" onclick="submitPagerDutyForm()">
+                Trigger via Events v2
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Incident / Priority</th>
+                  <th>Service & On-Call (Workday)</th>
+                  <th>LLM Remediation & Lineage</th>
+                  <th>MTTR & Net ROI</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pagerduty-incidents-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- OPSGENIE ("GENIE") PANEL -->
+        <div class="panel" style="margin-bottom:0;">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="badge" style="background:var(--og-blue);color:#fff;">Opsgenie / Genie v2</span>
+              <span>Atlassian Opsgenie Alert, Runbook & Heartbeat Hub (`api.opsgenie.com`)</span>
+            </div>
+            <div>
+              <button class="btn-sm" onclick="testSingleConnector('opsgenie')">Test api.opsgenie.com</button>
+            </div>
+          </div>
+
+          <!-- Create Opsgenie Alert Form -->
+          <div class="form-bar">
+            <div class="form-group">
+              <label for="og-msg-input">Alert Message</label>
+              <input id="og-msg-input" type="text" value="[P2] Genie Alert: Datadog & New Relic Error Budget Burn > 8x" />
+            </div>
+            <div class="form-group">
+              <label for="og-priority-input">Priority & Team</label>
+              <select id="og-priority-input">
+                <option value="P1">P1 — team-sre-core</option>
+                <option value="P2" selected>P2 — team-llm-platform</option>
+                <option value="P3">P3 — team-finops-erp</option>
+                <option value="P4">P4 — team-secops</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="og-llm-input">Genie Runbook LLM</label>
+              <select id="og-llm-input">
+                <option value="Gemini">Gemini 2.5 Pro Auto-Triage</option>
+                <option value="Claude">Claude 3.7 Sonnet Patch Bot</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <button class="btn-og" style="width:100%;justify-content:center;" onclick="submitOpsgenieForm()">
+                Create Genie Alert
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Alert ID / Priority</th>
+                  <th>Message, Alias & Runbook</th>
+                  <th>Responder Team & Tags</th>
+                  <th>MTTA / ROI</th>
+                  <th>Genie Actions</th>
+                </tr>
+              </thead>
+              <tbody id="opsgenie-alerts-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCHEDULES, SERVICES, HEARTBEATS & AUTOMATED RULES -->
+      <div class="dual-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>📟 PagerDuty Services, On-Call Schedules & BurnIQ Alert Rules</span>
+            </div>
+          </div>
+          <div class="table-wrap" style="margin-bottom:16px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Service ID</th>
+                  <th>Service Name & CMDB CI</th>
+                  <th>Escalation Policy</th>
+                  <th>Primary LLM Copilot</th>
+                  <th>Avg vs Baseline MTTR</th>
+                </tr>
+              </thead>
+              <tbody id="pagerduty-services-tbody"></tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rule ID</th>
+                  <th>Automated BurnIQ -> PagerDuty + Opsgenie Alert Rule</th>
+                  <th>Condition</th>
+                  <th>Auto-Remediation Action</th>
+                </tr>
+              </thead>
+              <tbody id="pagerduty-rules-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>💓 Opsgenie ("Genie") Heartbeat Monitors, Teams & On-Call Rotations</span>
+            </div>
+          </div>
+          <div class="table-wrap" style="margin-bottom:16px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Heartbeat Name</th>
+                  <th>Monitored Pipeline</th>
+                  <th>Owner Team</th>
+                  <th>Interval & Last Ping</th>
+                  <th>Status / Ping</th>
+                </tr>
+              </thead>
+              <tbody id="opsgenie-heartbeats-tbody"></tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Schedule & Team</th>
+                  <th>Current On-Call Responder</th>
+                  <th>Next Rotation</th>
+                  <th>Routing Policy</th>
+                </tr>
+              </thead>
+              <tbody id="opsgenie-schedules-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 2: ALL 22 ENTERPRISE CONNECTORS & GATEWAYS                    -->
+    <!-- ================================================================ -->
+    <div id="tab-connectors" class="tab-section">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🔌 Connected Enterprise Telemetry & Financial Gateways (22 Active Integrations)</span>
+          </div>
+          <div>
+            <button onclick="syncAllSystems()">Test & Sync All 22 Endpoints</button>
+          </div>
+        </div>
+        <div class="connector-grid" id="connectors-grid"></div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 3: CODE, COMMITS, BRANCHES & CI/CD RELEASES                   -->
+    <!-- ================================================================ -->
+    <div id="tab-cicd-code" class="tab-section">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🚀 Code-to-Commit-to-Release-to-Incident Attribution (GitHub, GitLab, Bitbucket, Jenkins, Bamboo)</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Release & CI/CD</th>
+                <th>SCM Repo, Branch & Commit</th>
+                <th>Engineer (Workday)</th>
+                <th>LLM Provider & AI %</th>
+                <th>Jira & ServiceNow</th>
+                <th>Linked PagerDuty & Opsgenie</th>
+                <th>Business Value</th>
+              </tr>
+            </thead>
+            <tbody id="releases-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🔭 Observability & DevSecOps Signal Correlation (Datadog, Substrate, New Relic, Soluble)</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Event ID</th>
+                <th>Provider & Host</th>
+                <th>Signal Type & Service</th>
+                <th>PagerDuty Incident</th>
+                <th>Opsgenie Alert</th>
+                <th>LLM Triage Summary</th>
+              </tr>
+            </thead>
+            <tbody id="observability-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 4: WORKDAY SALARIES, ERP/CRM & LOW-VALUE EMAIL/NOTE AUDIT     -->
+    <!-- ================================================================ -->
+    <div id="tab-workday-erp" class="tab-section">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>💼 Workday HRM Compensation, On-Call Stipends & Engineer LLM ROI</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee & Workday ID</th>
+                <th>Department & Cost Center</th>
+                <th>Salary & On-Call Rate</th>
+                <th>PagerDuty / Opsgenie Rotation</th>
+                <th>Claude & Gemini Burn</th>
+                <th>High-Value Coding + MTTR Hrs Saved</th>
+                <th>Low-Value Email/Note Waste</th>
+                <th>Net Salary ROI</th>
+              </tr>
+            </thead>
+            <tbody id="employees-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dual-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>⚠️ Low-Value Task Audit: Routine Emails & Meeting Notes</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Task & Channel</th>
+                  <th>Employee & Dept</th>
+                  <th>LLM Model & Cost</th>
+                  <th>Salary Burn</th>
+                  <th>PagerDuty / Opsgenie Governance Action</th>
+                </tr>
+              </thead>
+              <tbody id="low-value-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>🏦 ERP, CRM & BI Financial Ledgers (SAP, Salesforce, Sage Intacct, Oracle NetSuite, Power BI)</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>System & Record ID</th>
+                  <th>Cost Center & Metric</th>
+                  <th>Tracked Amount</th>
+                  <th>LLM Attributed Savings</th>
+                  <th>PagerDuty / Opsgenie Correlation</th>
+                </tr>
+              </thead>
+              <tbody id="erp-crm-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let dashboardState = null;
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.style.display = 'block';
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        el.style.display = 'none';
+      }, 3600);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-section').forEach(sec => {
+        sec.classList.toggle('active', sec.id === tabId);
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+      });
+    }
+
+    function fmtNum(n) {
+      return Number(n || 0).toLocaleString();
+    }
+
+    function fmtUsd(n) {
+      return '$' + Number(n || 0).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    async function loadDashboard() {
+      const res = await fetch('/api/dashboard');
+      const data = await res.json();
+      dashboardState = data;
+      renderAll(data);
+    }
+
+    function renderAll(data) {
+      const s = data.summary;
+      const pdSum = s.pagerduty_summary;
+      const ogSum = s.opsgenie_summary;
+
+      // Top pills
+      document.getElementById('pd-pill-text').textContent =
+        `Connected (${pdSum.active_incidents} Active / ${pdSum.total_incidents} Total)`;
+      document.getElementById('og-pill-text').textContent =
+        `Connected (${ogSum.open_or_acked_alerts} Open / ${ogSum.heartbeats_healthy}/${ogSum.heartbeats_total} HB)`;
+      document.getElementById('connectors-pill-count').textContent =
+        `${s.connectors_connected}/${s.connectors_total} Live`;
+
+      // KPIs
+      document.getElementById('kpi-pd-mttr').textContent =
+        `${pdSum.avg_mttr_minutes}m (-${pdSum.mttr_reduction_pct}%)`;
+      document.getElementById('kpi-pd-sub').textContent =
+        `${pdSum.total_incidents} Incidents • ${fmtUsd(pdSum.net_incident_roi_usd)} Net SLA & Salary ROI`;
+
+      document.getElementById('kpi-og-triage').textContent =
+        `${ogSum.auto_triage_rate_pct}% LLM Triaged`;
+      document.getElementById('kpi-og-sub').textContent =
+        `${ogSum.total_alerts} Alerts • ${ogSum.avg_mtta_minutes}m Avg MTTA • ${ogSum.heartbeats_healthy}/${ogSum.heartbeats_total} Heartbeats Healthy`;
+
+      document.getElementById('kpi-llm-tokens').textContent =
+        `${(s.llm_telemetry.total_tokens / 1e6).toFixed(1)}M Tokens`;
+      document.getElementById('kpi-llm-sub').textContent =
+        `${fmtUsd(s.llm_telemetry.total_llm_spend_usd)} Spend • ${s.llm_telemetry.high_value_utilization_pct}% High-Value Utilization`;
+
+      document.getElementById('kpi-workday-roi').textContent =
+        fmtUsd(s.workday_roi.net_salary_roi_usd);
+      document.getElementById('kpi-workday-sub').textContent =
+        `${s.workday_roi.total_coding_hours_saved} Coding Hrs + ${s.workday_roi.total_incident_mttr_hours_saved} On-Call MTTR Hrs Saved`;
+
+      // Render PagerDuty Incidents
+      const pdTbody = document.getElementById('pagerduty-incidents-tbody');
+      pdTbody.innerHTML = data.pagerduty.incidents.map(inc => {
+        const llmBadge = inc.llm_provider === 'Claude' ? 'badge-claude' : 'badge-gemini';
+        const statusBadge = `badge-${inc.status}`;
+        const prioBadge = `badge-${inc.priority.toLowerCase()}`;
+        return `
+          <tr>
+            <td>
+              <div class="mono" style="font-weight:700;">${inc.id}</div>
+              <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
+                <span class="badge ${prioBadge}">${inc.priority}</span>
+                <span class="badge ${statusBadge}">${inc.status}</span>
+              </div>
+              ${inc.caused_by_ai_commit ? '<div style="margin-top:4px;font-size:10.5px;color:#fca5a5;">⚠️ AI Commit Regression</div>' : ''}
+            </td>
+            <td>
+              <div style="font-weight:600;">${inc.title}</div>
+              <div style="color:var(--text-secondary);font-size:11.5px;margin-top:2px;">
+                Service: <strong>${inc.service_name}</strong><br/>
+                Responder: <strong>${inc.assigned_to}</strong> (${inc.employee_id})
+              </div>
+            </td>
+            <td>
+              <span class="badge ${llmBadge}">${inc.llm_provider}: ${inc.llm_model}</span>
+              <div style="font-size:11.5px;color:var(--text-secondary);margin-top:4px;">
+                ${inc.llm_role}<br/>
+                Commit <span class="mono">${inc.hotfix_commit_sha}</span> • Release <span class="mono">${inc.ci_release_id}</span> • Jira <span class="mono">${inc.jira_key}</span><br/>
+                Opsgenie: <span class="mono">${inc.opsgenie_linked_alert_id}</span>
+              </div>
+            </td>
+            <td>
+              <div style="font-weight:700;color:#4ade80;">${fmtUsd(inc.net_incident_roi_usd)}</div>
+              <div style="font-size:11px;color:var(--text-secondary);">
+                MTTR: <strong>${inc.mttr_minutes}m</strong> (vs ${inc.baseline_mttr_minutes}m)<br/>
+                LLM Cost: ${fmtUsd(inc.llm_cost_usd)}
+              </div>
+            </td>
+            <td>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                ${inc.status !== 'acknowledged' && inc.status !== 'resolved' ? `<button class="btn-sm" onclick="actPagerDuty('${inc.id}', 'acknowledge')">Ack</button>` : ''}
+                ${inc.status !== 'resolved' ? `<button class="btn-sm btn-pd" onclick="actPagerDuty('${inc.id}', 'resolve')">Resolve</button>` : `<button class="btn-sm" onclick="actPagerDuty('${inc.id}', 'reopen')">Reopen</button>`}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Render Opsgenie Alerts
+      const ogTbody = document.getElementById('opsgenie-alerts-tbody');
+      ogTbody.innerHTML = data.opsgenie.alerts.map(alt => {
+        const llmBadge = alt.llm_provider === 'Claude' ? 'badge-claude' : 'badge-gemini';
+        const statusBadge = `badge-${alt.status}`;
+        const prioBadge = `badge-${alt.priority.toLowerCase()}`;
+        const teamResp = (alt.responders || []).map(r => r.name || r.username).join(', ');
+        return `
+          <tr>
+            <td>
+              <div class="mono" style="font-weight:700;">${alt.id}</div>
+              <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
+                <span class="badge ${prioBadge}">${alt.priority}</span>
+                <span class="badge ${statusBadge}">${alt.status}</span>
+              </div>
+            </td>
+            <td>
+              <div style="font-weight:600;">${alt.message}</div>
+              <div class="mono" style="color:var(--text-secondary);font-size:11px;margin-top:2px;">alias: ${alt.alias}</div>
+              <div style="font-size:11.5px;color:#93c5fd;margin-top:3px;">🤖 ${alt.runbook_executed}</div>
+            </td>
+            <td>
+              <span class="badge ${llmBadge}">${alt.llm_provider}: ${alt.llm_model}</span>
+              <div style="font-size:11.5px;color:var(--text-secondary);margin-top:4px;">
+                Responders: <strong>${teamResp}</strong><br/>
+                PD Link: <span class="mono">${alt.linked_pd_incident_id}</span> • Release: <span class="mono">${alt.linked_release_id}</span>
+              </div>
+            </td>
+            <td>
+              <div style="font-weight:700;color:#60a5fa;">${fmtUsd(alt.net_roi_usd)}</div>
+              <div style="font-size:11px;color:var(--text-secondary);">
+                MTTA: <strong>${alt.mtta_minutes}m</strong><br/>
+                Saved: ${fmtUsd(alt.salary_saved_usd)}
+              </div>
+            </td>
+            <td>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                ${alt.status === 'open' ? `<button class="btn-sm" onclick="actOpsgenie('${alt.id}', 'acknowledge')">Ack</button>` : ''}
+                ${alt.status !== 'closed' ? `<button class="btn-sm btn-og" onclick="actOpsgenie('${alt.id}', 'close')">Close</button>` : `<button class="btn-sm" onclick="actOpsgenie('${alt.id}', 'reopen')">Reopen</button>`}
+                ${alt.status !== 'closed' ? `<button class="btn-sm" onclick="actOpsgenie('${alt.id}', 'escalate')">→ PagerDuty</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // PagerDuty Services & Rules
+      document.getElementById('pagerduty-services-tbody').innerHTML = data.pagerduty.services.map(svc => `
+        <tr>
+          <td class="mono" style="font-weight:700;">${svc.id}</td>
+          <td><strong>${svc.name}</strong><br/><span class="mono" style="color:var(--text-secondary);">CMDB: ${svc.cmdb_ci}</span></td>
+          <td>${svc.escalation_policy}</td>
+          <td>${svc.primary_llm}</td>
+          <td><strong style="color:#4ade80;">${svc.mttr_avg_minutes}m</strong> vs ${svc.baseline_mttr_minutes}m</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('pagerduty-rules-tbody').innerHTML = data.pagerduty.alert_rules.map(r => `
+        <tr>
+          <td class="mono" style="font-weight:700;">${r.rule_id}</td>
+          <td><strong>${r.name}</strong><br/><span style="font-size:11px;color:var(--text-secondary);">Target: ${r.target_service} + Opsgenie ${r.opsgenie_mirror_team}</span></td>
+          <td style="font-size:11.5px;">${r.condition}</td>
+          <td style="font-size:11.5px;color:#6ee7b7;">${r.auto_remediation}</td>
+        </tr>
+      `).join('');
+
+      // Opsgenie Heartbeats & Schedules
+      document.getElementById('opsgenie-heartbeats-tbody').innerHTML = data.opsgenie.heartbeats.map(hb => `
+        <tr>
+          <td class="mono" style="font-weight:700;">${hb.name}</td>
+          <td>${hb.description}</td>
+          <td class="mono">${hb.owner_team}</td>
+          <td>Every ${hb.interval} ${hb.interval_unit}<br/><span class="mono" style="color:var(--text-secondary);">${hb.last_ping_at}</span></td>
+          <td>
+            <span class="badge badge-healthy">${hb.status}</span>
+            <button class="btn-sm" style="margin-top:4px;" onclick="pingHeartbeat('${hb.name}')">Ping</button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.getElementById('opsgenie-schedules-tbody').innerHTML = data.opsgenie.schedules.map(sch => `
+        <tr>
+          <td><strong class="mono">${sch.name}</strong><br/><span style="font-size:11px;color:var(--text-secondary);">Team: ${sch.team} (${sch.rotation_type})</span></td>
+          <td><strong>${sch.on_call_now}</strong></td>
+          <td>${sch.next_rotation}</td>
+          <td style="font-size:11.5px;color:var(--text-secondary);">Timezone: ${sch.timezone}</td>
+        </tr>
+      `).join('');
+
+      // Connectors Grid
+      document.getElementById('connectors-grid').innerHTML = data.connectors.map(c => {
+        const cls = c.id === 'pagerduty' ? 'highlight-pd' : (c.id === 'opsgenie' ? 'highlight-og' : '');
+        return `
+          <div class="connector-card ${cls}">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <strong style="font-size:14px;">${c.name}</strong>
+                <span class="badge badge-connected">${c.status} (${c.latency_ms}ms)</span>
+              </div>
+              <div style="font-size:11px;color:#38bdf8;font-weight:600;margin-top:2px;">${c.category}</div>
+              <div class="mono" style="color:var(--text-secondary);margin-top:6px;">Host: ${c.host}</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">${c.highlights}</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--border);">
+              <span class="mono" style="color:var(--text-muted);">${fmtNum(c.records_synced)} records</span>
+              <button class="btn-sm" onclick="testSingleConnector('${c.id}')">Test Gateway</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Releases Table
+      document.getElementById('releases-tbody').innerHTML = data.commits_and_releases.map(rel => `
+        <tr>
+          <td><strong class="mono">${rel.release_id}</strong><br/><span class="badge badge-connected">${rel.ci_system}</span></td>
+          <td><strong>${rel.scm_system}: ${rel.repository}</strong><br/><span class="mono">branch: ${rel.branch} (${rel.commit_sha})</span></td>
+          <td>${rel.author} (${rel.employee_id})</td>
+          <td><span class="badge ${rel.llm_provider === 'Claude' ? 'badge-claude' : 'badge-gemini'}">${rel.llm_provider} (${rel.llm_model})</span><br/>AI Code: <strong>${rel.ai_assisted_pct}%</strong> (${fmtNum(rel.tokens_burned)} tok)</td>
+          <td class="mono">Jira: ${rel.jira_key}<br/>SNOW: ${rel.servicenow_chg}</td>
+          <td class="mono">PagerDuty: <strong>${rel.pagerduty_incident_id}</strong><br/>Opsgenie: <strong>${rel.opsgenie_alert_id}</strong></td>
+          <td style="font-weight:700;color:#4ade80;">${fmtUsd(rel.business_value_usd)}</td>
+        </tr>
+      `).join('');
+
+      // Observability Table
+      document.getElementById('observability-tbody').innerHTML = data.observability_events.map(ev => `
+        <tr>
+          <td class="mono" style="font-weight:700;">${ev.event_id}</td>
+          <td><strong>${ev.provider}</strong><br/><span class="mono" style="color:var(--text-secondary);">${ev.host}</span></td>
+          <td>${ev.signal_type}<br/><span class="mono" style="color:var(--text-secondary);">${ev.service}</span></td>
+          <td class="mono">${ev.pagerduty_incident_id}</td>
+          <td class="mono">${ev.opsgenie_alert_id}</td>
+          <td>${ev.llm_triage_summary}</td>
+        </tr>
+      `).join('');
+
+      // Employees Table
+      document.getElementById('employees-tbody').innerHTML = data.employees.map(emp => `
+        <tr>
+          <td><strong>${emp.name}</strong> (${emp.employee_id})<br/><span style="font-size:11px;color:var(--text-secondary);">${emp.title}</span></td>
+          <td>${emp.department}<br/><span class="mono" style="color:var(--text-secondary);">${emp.cost_center}</span></td>
+          <td>${fmtUsd(emp.annual_salary_usd)}/yr<br/><span style="font-size:11px;color:var(--text-secondary);">${fmtUsd(emp.hourly_rate_usd)}/hr + ${fmtUsd(emp.oncall_stipend_hourly_usd)}/hr On-Call</span></td>
+          <td>PD: <strong>${emp.pagerduty_schedule}</strong><br/>Genie: <span class="mono">${emp.opsgenie_team}</span></td>
+          <td>Claude: ${(emp.claude_tokens / 1e6).toFixed(2)}M<br/>Gemini: ${(emp.gemini_tokens / 1e6).toFixed(2)}M (${fmtUsd(emp.llm_spend_usd)})</td>
+          <td><strong>${emp.coding_hours_saved}h</strong> coding + <strong>${emp.mttr_hours_saved}h</strong> MTTR<br/><span style="font-size:11px;color:var(--text-secondary);">${emp.incidents_resolved} incidents resolved</span></td>
+          <td style="color:${emp.low_value_llm_waste_usd > 20 ? '#fca5a5' : 'var(--text-secondary)'};">
+            ${emp.low_value_email_note_hours}h (${fmtUsd(emp.low_value_llm_waste_usd)})
+          </td>
+          <td style="font-weight:700;color:${emp.net_salary_roi_usd >= 0 ? '#4ade80' : '#ef4444'};">
+            ${fmtUsd(emp.net_salary_roi_usd)} (${emp.roi_multiplier}x)
+          </td>
+        </tr>
+      `).join('');
+
+      // Low-Value Tasks
+      document.getElementById('low-value-tbody').innerHTML = data.low_value_tasks.map(t => `
+        <tr>
+          <td><strong>${t.task_type}</strong><br/><span style="font-size:11px;color:var(--text-secondary);">${t.channel}</span></td>
+          <td>${t.employee_name} (${t.employee_id})<br/><span style="font-size:11px;color:var(--text-secondary);">${t.department}</span></td>
+          <td>${t.llm_provider} (${t.llm_model})<br/><strong style="color:#fca5a5;">${fmtUsd(t.llm_cost_usd)}</strong></td>
+          <td>${t.employee_time_minutes}m (${fmtUsd(t.salary_cost_usd)})</td>
+          <td style="font-size:11.5px;color:#6ee7b7;">${t.policy_action}</td>
+        </tr>
+      `).join('');
+
+      // ERP & CRM
+      document.getElementById('erp-crm-tbody').innerHTML = data.erp_crm_records.map(r => `
+        <tr>
+          <td><strong>${r.system}</strong><br/><span class="mono" style="color:var(--text-secondary);">${r.record_id}</span></td>
+          <td><span class="mono">${r.cost_center}</span><br/>${r.metric}</td>
+          <td>${fmtUsd(r.amount_usd)}</td>
+          <td style="font-weight:700;color:#4ade80;">${fmtUsd(r.llm_attributed_savings_usd)}</td>
+          <td style="font-size:11.5px;color:var(--text-secondary);">${r.incident_correlation}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function submitPagerDutyForm() {
+      const title = document.getElementById('pd-title-input').value;
+      const priority = document.getElementById('pd-priority-input').value;
+      const llm_provider = document.getElementById('pd-llm-input').value;
+      const res = await fetch('/api/pagerduty/incidents', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ title, priority, llm_provider, mirror_to_opsgenie: true })
+      });
+      const out = await res.json();
+      showToast(`Triggered PagerDuty Incident ${out.incident.id} (+ mirrored to Opsgenie ${out.incident.opsgenie_linked_alert_id})`);
+      await loadDashboard();
+    }
+
+    async function quickTriggerPagerDuty() {
+      switchTab('tab-pd-genie');
+      await submitPagerDutyForm();
+    }
+
+    async function submitOpsgenieForm() {
+      const message = document.getElementById('og-msg-input').value;
+      const priority = document.getElementById('og-priority-input').value;
+      const llm_provider = document.getElementById('og-llm-input').value;
+      const res = await fetch('/api/opsgenie/alerts', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ message, priority, llm_provider })
+      });
+      const out = await res.json();
+      showToast(`Created Opsgenie Alert ${out.alert.id} (${out.alert.priority}) with ${llm_provider} Runbook`);
+      await loadDashboard();
+    }
+
+    async function quickCreateOpsgenieAlert() {
+      switchTab('tab-pd-genie');
+      await submitOpsgenieForm();
+    }
+
+    async function actPagerDuty(id, action) {
+      await fetch(`/api/pagerduty/incidents/${id}/${action}`, { method: 'POST' });
+      showToast(`PagerDuty ${id}: ${action.toUpperCase()} completed`);
+      await loadDashboard();
+    }
+
+    async function actOpsgenie(id, action) {
+      await fetch(`/api/opsgenie/alerts/${id}/${action}`, { method: 'POST' });
+      showToast(`Opsgenie ${id}: ${action.toUpperCase()} completed`);
+      await loadDashboard();
+    }
+
+    async function pingHeartbeat(name) {
+      await fetch(`/api/opsgenie/heartbeats/${name}/ping`, { method: 'POST' });
+      showToast(`Opsgenie Heartbeat '${name}' pinged — Healthy`);
+      await loadDashboard();
+    }
+
+    async function testSingleConnector(id) {
+      const res = await fetch(`/api/connectors/${id}/test`, { method: 'POST' });
+      const data = await res.json();
+      if (data.connector && data.connector.endpoint) {
+        await fetch(data.connector.endpoint);
+      }
+      showToast(`Verified ${data.connector.name} (${data.connector.host}) — 200 OK`);
+      await loadDashboard();
+    }
+
+    async function syncAllSystems() {
+      await fetch('/api/pagerduty/sync', { method: 'POST' });
+      await fetch('/api/opsgenie/sync', { method: 'POST' });
+      await fetch('/mock-enterprise/api.pagerduty.com/v2/connection');
+      await fetch('/mock-enterprise/api.opsgenie.com/v2/connection');
+      showToast('Synced PagerDuty (api.pagerduty.com), Opsgenie (api.opsgenie.com) & all 22 Enterprise Gateways');
+      await loadDashboard();
+    }
+
+    window.addEventListener('DOMContentLoaded', loadDashboard);
+  </script>
+</body>
+</html>
