@@ -180,6 +180,57 @@ class HybridRAGEngine:
 
         conn.close()
 
+        # 4. Also index Dual-ERP (Sage Intacct/X3 & Oracle NetSuite OneWorld) & Release records from burniq.data_store
+        try:
+            from burniq.data_store import store
+            for b in store.state.get("sage_erp", {}).get("gl_batches", []):
+                c_txt = (
+                    f"Sage Intacct & Sage X3 GL Batch {b['batch_id']} ({b['journal_symbol']}) in entity {b['entity_id']}: "
+                    f"Debit {b['debit_account']} / Credit {b['credit_account']} for ${b['amount_usd']:,.2f} USD. "
+                    f"{b['description']} ({b['project_dim']}). Audit trail: {b['audit_trail']}."
+                )
+                docs.append({
+                    "id": b["batch_id"],
+                    "title": f"[Sage ERP GL Batch] {b['batch_id']} — {b['entity_id']} (${b['amount_usd']:,.2f})",
+                    "connection_id": "conn-sap-erp",
+                    "connection_name": "Sage Intacct & Sage X3 ERP",
+                    "connection_enabled": True,
+                    "rag_enabled": True,
+                    "source_type": "finops_sap",
+                    "persona_tags": "csuite,managers,techops",
+                    "department": b["department"],
+                    "content": c_txt,
+                    "metadata": b,
+                    "token_count": len(c_txt.split()),
+                    "importance_weight": 1.25,
+                    "created_at": b["posting_date"],
+                })
+            for je in store.state.get("oracle_netsuite", {}).get("journal_entries", []):
+                c_txt = (
+                    f"Oracle NetSuite OneWorld Journal Entry {je['tran_id']} in {je['subsidiary']}: "
+                    f"Debit {je['debit_account']} / Credit {je['credit_account']} for ${je['amount_usd']:,.2f} USD. "
+                    f"Provider segment: {je['cseg_ai_provider']}, Value tier: {je['cseg_task_value_tier']}, "
+                    f"Linked Jira: {je['linked_jira_epic']}, Release: {je['linked_git_release']}. Memo: {je['memo']}."
+                )
+                docs.append({
+                    "id": je["tran_id"],
+                    "title": f"[Oracle NetSuite OneWorld] {je['tran_id']} — {je['subsidiary']} (${je['amount_usd']:,.2f})",
+                    "connection_id": "conn-sap-erp",
+                    "connection_name": "Oracle NetSuite OneWorld & SuiteQL",
+                    "connection_enabled": True,
+                    "rag_enabled": True,
+                    "source_type": "finops_sap",
+                    "persona_tags": "csuite,managers,developers",
+                    "department": "Enterprise Systems & FinOps",
+                    "content": c_txt,
+                    "metadata": je,
+                    "token_count": len(c_txt.split()),
+                    "importance_weight": 1.25,
+                    "created_at": je["trandate"],
+                })
+        except Exception:
+            pass
+
         self.corpus = docs
         self.doc_freqs = {}
         self.doc_token_counts = []

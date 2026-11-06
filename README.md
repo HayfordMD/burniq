@@ -1,38 +1,43 @@
-# BurnIQ — Enterprise AI Telemetry, Service Connection Control, Multi-Persona Analytics & Google Flash 3-8 Fast Lite RAG Platform
+# BurnIQ — Enterprise LLM Telemetry, Sage & Oracle NetSuite ERP & Workday Salary ROI Platform
 
-**BurnIQ** is a full-stack enterprise LLM telemetry, FinOps attribution, service connection governance, and RAG intelligence platform. It tracks corporate AI usage (Google Gemini & Anthropic Claude) end-to-end from source code, Git commits, branches, and CI/CD releases (**GitHub, GitLab, Bitbucket, Jenkins, Bamboo**) to **Jira** tasks, **ServiceNow** incidents, **Zendesk** support deflection, **Workday HRM** compensation bands, **Salesforce** pipeline velocity, **SAP S/4HANA** cost centers, **Power BI**, and low-value task audits (corporate emails, meeting notes, and Slack summaries).
-
----
-
-## Core Capabilities
-
-### 1. Real-Time Service Connection Control Center (Turn ON / OFF)
-- **16 Enterprise Connectors** across 6 categories (*LLM Gateways*, *Source Control*, *CI/CD Pipelines*, *Issue & ITSM*, *ERP / HR / CRM*, *BI & Ingestion*).
-- **Individual & Bulk ON / OFF Circuit Switches**: Toggle any service connection `ON` or `OFF` from the global quick-strip, the dedicated Connections Control Center, or inline within Technical Ops charts/tables.
-- **Live Downstream Impact**: Turning a connection `OFF` immediately pauses webhook ingestion, halts token spend for that stream, updates all 4 persona dashboards, and isolates its live stream from default RAG retrieval.
-- **Per-Connector RAG Indexing Toggle, Diagnostic Health Probe & Manual Sync**.
-
-### 2. Multi-Persona Charts & Metric Dashboards
-- **01 · Technical Ops & SRE (`techops`)**: Active connector uptime, telemetry ingestion throughput (`ev/min`), `Google Flash 3-8 Fast Lite` P95 latency (`112ms`), RAG vector index health, and ServiceNow P1/P2 MTTR reduction (`-54%`).
-- **02 · Developers & Architects (`developers`)**: Code-to-Release attribution funnel (Prompts &rarr; Git Commits &rarr; Branches &rarr; PRs &rarr; Jenkins/Bamboo CI &rarr; Releases), LOC per 1k tokens by language, PR merge cycle time (`4.2 hrs`), and IDE RAG cache hit rate (`89.5%`).
-- **03 · Engineering Managers (`managers`)**: Jira sprint velocity (`470 SP`), engineering hours reclaimed (`11.6 hrs/dev/wk`), and **High-Value vs Low-Value Task Audit** (automatically routing low-value email polishing & meeting note formatting to `Google Flash 3-8 Fast Lite` to eliminate 97.6% of administrative token waste).
-- **04 · C-Suite Executive (`csuite`)**: Net Enterprise AI ROI (`5.4x`), verified **Workday HRM** payroll value reclaimed (`$286.2K/mo` gross / `$168.4K/mo` net), **SAP S/4HANA** cost-center budget variance (`15.8% under budget`), and an interactive **FinOps & Flash-Lite Routing Simulator**.
-
-### 3. Robust Enterprise Search & Customized RAG-Trained LLM (`Google Flash 3-8 Fast Lite`)
-- **Hybrid BM25 + 64-Dim NumPy SVD Vector Search (`/api/search`)**: Instant lexical + semantic search across commits, CI builds, Jira epics, ServiceNow postmortems, Workday ROI ledgers, and custom RAG documents, with active-connection circuit filtering.
-- **Customized RAG-Trained Lightweight LLM (`/api/llm/chat`)**: Powered by **`google/gemini-3-8-flash-lite` (Google Flash 3-8 Fast Lite)** (`$0.035/1M` input tokens, `$0.008/1M` cached RAG tokens, `94ms` avg TTFT) trained on enterprise RAG ingestion (`burniq-flash-3-8-fast-lite-rag-v2.4`), returning persona-adapted markdown tables, inline `[DOC-xxx]` citations, and live cost-savings telemetry (`96.8%+` cheaper than frontier models).
-- **Interactive RAG Ingestion & LoRA Adapter Calibration Studio (`/api/rag/ingest` & `/api/rag/train`)**: Ingest new markdown runbooks or CSV datasets and trigger live SVD vector re-indexing and adapter calibration.
+**BurnIQ** attributes corporate LLM usage (**Anthropic Claude** & **Google Cloud Vertex AI Gemini**) across engineering source control (**GitHub**, **GitLab**, **Bitbucket**), CI/CD release pipelines (**Jenkins**, **Bamboo**), agile & ITSM workflows (**Jira**, **ServiceNow**, **Zendesk**), observability & security (**Datadog**, **Substrate**, **New Relic**, **Soluble**, **PagerDuty**, **Opsgenie**), employee compensation (**Workday HCM**), and enterprise financial ledgers (**Sage Intacct / Sage X3**, **Oracle NetSuite OneWorld & SuiteQL**, **SAP S/4HANA**, **Salesforce Revenue Cloud**, and **Microsoft Power BI**).
 
 ---
 
-## Quick Start
+## Core Enterprise Capabilities
+
+### 1. Sage Intacct, Sage X3 & Sage 300 ERP Integration (`/api/erp/sage`)
+- **Multi-Entity General Ledger Consolidation**:
+  - `E100` — *BurnIQ North America Inc.* (Sage Intacct Multi-Entity, USD)
+  - `E200` — *BurnIQ EMEA Operations Ltd.* (Sage X3 Enterprise, EUR)
+  - `E300` — *BurnIQ APAC Pte. Ltd.* (Sage 300 Cloud, SGD)
+- **ASC 350-40 / IAS 38 Software Development Capitalization**:
+  - Automatically maps verified engineering token spend + Workday loaded engineering hours from shipped Git/CI-CD releases into **Sage GL Account `1650-01` (Capitalized AI R&D)** vs **`6120-01` (Production AI OpEx)** and **`6120-02` (Low-Value Email/Notes SG&A Waste)**.
+- **3-Way Matched AP Vendor Bills**:
+  - Reconciles monthly Anthropic PBC and Google Cloud Vertex AI invoices against granular developer token telemetry.
+- **Live GL Batch Creation & CSV Export**:
+  - Create and post balanced Sage Intacct GL Batches (`POST /api/erp/sage/gl-batch`) and export Sage Intacct-compatible CSV batches (`GET /api/export/sage`).
+
+### 2. Oracle NetSuite OneWorld & SuiteQL Integration (`/api/erp/netsuite`)
+- **OneWorld Multi-Subsidiary Hierarchy**:
+  - `SUB-1` (*BurnIQ Global Holdings Consolidated USD*), `SUB-2` (*BurnIQ Technologies US Inc.*), `SUB-3` (*BurnIQ Europe Ltd. GBP*), and `SUB-4` (*BurnIQ DACH GmbH EUR*).
+- **SuiteTalk REST v1 Journal Entries & Custom Segments**:
+  - Posts multi-subsidiary `journalEntry` records tagged with Custom Segments `cseg_ai_provider` (*Anthropic Claude*, *Google Gemini*) and `cseg_task_value_tier` (*Tier 1: Production Release Code*, *Tier 2: Architecture & PR Review*, *Tier 3: Low-Value Email/Notes Waste*).
+- **Interactive SuiteQL Analytics Query Engine (`POST /api/erp/netsuite/suiteql`)**:
+  - Query NetSuite transactions, OneWorld subsidiaries, annual LLM commit Purchase Orders (`PO-NS-8841`, `PO-NS-8842`), and 36-month R&D CapEx Amortization Schedules (`AMORT-NS-301`..`303`).
+
+### 3. Low-Value Task Auditor (Emails, Meeting Notes & Ad-Hoc Prompts)
+- Identifies non-engineering prompts burning frontier models (`claude-3-opus`, `claude-3-7-sonnet`, `gemini-2.5-pro`) on routine internal emails and meeting notes with zero git commits.
+- Provides 1-click **Smart Model Routing (`POST /api/audit/optimize-routing`)** to downgrade routine email/notes traffic to `claude-3-5-haiku` / `gemini-2.5-flash` and automatically update **Sage GL `6120-02`** and **Oracle NetSuite `JE-NS-9043`**.
+
+---
+
+## Running Locally
 
 ```bash
-uvicorn backend.main:app --host 0.0.0.0 --port 8000
-```
+# Start Main BurnIQ Platform on Port 8000
+uvicorn main:app --host 0.0.0.0 --port 8000
 
-Run the automated end-to-end verification suite:
-
-```bash
-python3 tests/test_api.py
+# Start Mock Enterprise Gateway on Port 8090
+uvicorn mock_enterprise:app --host 0.0.0.0 --port 8090
 ```
