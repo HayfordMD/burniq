@@ -129,11 +129,17 @@ async def salesforce_connection() -> Dict[str, Any]:
     }
 
 
+from backend.mock_enterprise import build_vendor_connection_payload
+
+
 @mock_router.api_route("/{host}/{rest_of_path:path}", methods=["GET", "POST", "PUT"])
 async def universal_enterprise_mock(
     host: str, rest_of_path: str, request: Request
 ) -> Dict[str, Any]:
+    full_path = f"{host}/{rest_of_path}"
+    vendor_payload = build_vendor_connection_payload(full_path)
     return {
+        **vendor_payload,
         "ok": True,
         "host": host,
         "path": f"/{rest_of_path}",
@@ -147,7 +153,7 @@ async def universal_enterprise_mock(
 app = FastAPI(
     title="BurnIQ Enterprise Mock Gateway",
     version="2.4.0",
-    description="Simulates Sage Intacct, Sage X3, Oracle NetSuite OneWorld, Workday, SAP, Salesforce, Power BI, ServiceNow, Zendesk, Jira, and CI/CD endpoints.",
+    description="Simulates Datadog, Substrate, New Relic, Soluble, Sage Intacct, Sage X3, Oracle NetSuite OneWorld, Workday, SAP, Salesforce, Power BI, ServiceNow, Zendesk, Jira, PagerDuty, Opsgenie, and CI/CD endpoints.",
 )
 
 app.add_middleware(
@@ -162,7 +168,12 @@ app.add_middleware(
 @app.get("/health")
 @app.get("/api/health")
 async def gateway_health() -> Dict[str, Any]:
-    return {"status": "ok", "service": "burniq-mock-enterprise-gateway", "port": 8090}
+    return {
+        "status": "ok",
+        "service": "burniq-mock-enterprise-gateway",
+        "port": 8090,
+        "featured_integrations": ["datadog", "substrate", "newrelic", "soluble", "sage", "netsuite"],
+    }
 
 
 app.include_router(mock_router)

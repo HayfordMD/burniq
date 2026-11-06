@@ -132,6 +132,30 @@ code, pre, .mono {
   border-color: rgba(251, 146, 60, 0.3);
 }
 
+.erp-pill.datadog {
+  background: rgba(56, 189, 248, 0.13);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.32);
+}
+
+.erp-pill.substrate {
+  background: rgba(245, 158, 11, 0.14);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.32);
+}
+
+.erp-pill.newrelic {
+  background: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.32);
+}
+
+.erp-pill.soluble {
+  background: rgba(20, 184, 166, 0.14);
+  color: #2dd4bf;
+  border-color: rgba(20, 184, 166, 0.32);
+}
+
 .status-dot {
   width: 7px;
   height: 7px;

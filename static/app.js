@@ -354,6 +354,223 @@
     });
   }
 
+  function renderObservability(obs) {
+    if (!obs) return;
+    const dd = obs.datadog || {};
+    const sub = obs.substrate || {};
+    const nr = obs.newrelic || {};
+    const sol = obs.soluble || {};
+    const corrs = obs.cross_platform_correlations || [];
+
+    const corrTbody = document.getElementById("obs-correlations-tbody");
+    if (corrTbody) {
+      corrTbody.innerHTML = corrs
+        .map(
+          (c) => `
+        <tr>
+          <td><strong>${c.correlation_id}</strong><br/><span style="font-size:12px;color:var(--text-secondary)">${c.title}</span></td>
+          <td style="font-size:12px">${c.datadog_signal}</td>
+          <td style="font-size:12px">${c.newrelic_signal}</td>
+          <td style="font-size:12px">${c.soluble_signal}</td>
+          <td style="font-size:12px">${c.substrate_signal}</td>
+          <td><span class="badge badge-success">${c.net_business_impact}</span></td>
+        </tr>`
+        )
+        .join("");
+    }
+
+    const doraTbody = document.getElementById("obs-dd-dora-tbody");
+    if (doraTbody && dd.dora_comparison && dd.dora_comparison.by_cicd_provider) {
+      doraTbody.innerHTML = dd.dora_comparison.by_cicd_provider
+        .map(
+          (d) => `
+        <tr>
+          <td><strong>${d.provider}</strong></td>
+          <td class="mono"><strong>${d.deployments_30d} deploys/30d</strong></td>
+          <td class="mono">${d.lead_time_hrs} hrs lead time</td>
+          <td><span class="badge badge-success">${d.cfr_pct}% CFR &bull; ${d.mttr_min}m MTTR</span></td>
+          <td><span class="badge badge-sky">${d.ai_commit_share_pct}% AI Commits</span></td>
+        </tr>`
+        )
+        .join("");
+    }
+
+    const monTbody = document.getElementById("obs-dd-monitors-tbody");
+    if (monTbody && dd.apm_monitors) {
+      monTbody.innerHTML = dd.apm_monitors
+        .map(
+          (m) => `
+        <tr>
+          <td class="mono"><strong>${m.monitor_id}</strong></td>
+          <td><strong>${m.name}</strong><br/><span style="font-size:11px;color:var(--text-muted)">${m.remediation}</span></td>
+          <td><span class="badge badge-sky">${m.type}</span></td>
+          <td><span class="badge ${m.status === "ALERT" ? "badge-danger" : m.status === "WARN" ? "badge-amber" : "badge-success"}">${m.status} (${m.severity})</span></td>
+          <td class="mono">${m.current_value} / ${m.threshold}</td>
+        </tr>`
+        )
+        .join("");
+    }
+
+    const spansTbody = document.getElementById("obs-dd-spans-tbody");
+    if (spansTbody && dd.llm_observability_spans) {
+      spansTbody.innerHTML = dd.llm_observability_spans
+        .map(
+          (s) => `
+        <tr>
+          <td class="mono"><strong>${s.trace_id}</strong></td>
+          <td class="mono">${s.service}</td>
+          <td class="mono">${s.model}</td>
+          <td><strong>${s.engineer}</strong><br/><span style="font-size:11.5px;color:var(--text-secondary)">${s.department}</span></td>
+          <td><span class="badge ${s.task_category.includes("LOW-VALUE") ? "badge-danger" : "badge-success"}">${s.task_category}</span></td>
+          <td class="mono">${fmtInt(s.total_tokens)}</td>
+          <td class="mono">${fmtUSD(s.cost_usd)}</td>
+          <td class="mono">${fmtInt(s.latency_ms)} ms</td>
+          <td class="mono">${s.git_commit}<br/><span style="font-size:11px;color:var(--text-muted)">${s.jira_key} &bull; ${s.release_id}</span></td>
+        </tr>`
+        )
+        .join("");
+    }
+
+    const subSigTbody = document.getElementById("obs-substrate-signals-tbody");
+    if (subSigTbody && sub.microsoft_substrate_signals) {
+      subSigTbody.innerHTML = sub.microsoft_substrate_signals
+        .map(
+          (s) => `
+        <tr>
+          <td class="mono"><strong>${s.signal_id}</strong></td>
+          <td><strong>${s.channel}</strong><br/><span style="font-size:11.5px;color:var(--text-secondary)">${s.artifact_type}</span></td>
+          <td>${s.department}</td>
+          <td class="mono">${s.model}</td>
+          <td class="mono">${fmtInt(s.monthly_events)}</td>
+          <td class="mono">${fmtInt(s.tokens_burned)}</td>
+          <td class="mono">${fmtUSD(s.llm_cost_usd)}</td>
+          <td class="mono"><strong>${fmtUSD(s.workday_salary_burn_usd)}</strong></td>
+          <td><span class="badge ${s.value_classification.includes("LOW-VALUE") ? "badge-danger" : "badge-success"}">${s.value_classification}</span></td>
+          <td>
+            ${
+              s.value_classification.includes("LOW-VALUE")
+                ? `<button class="btn btn-primary btn-enforce-substrate" data-signal-id="${s.signal_id}" type="button">Enforce Haiku/Flash Policy</button>`
+                : `<span style="font-size:12px;color:var(--text-secondary)">${s.action_policy}</span>`
+            }
+          </td>
+        </tr>`
+        )
+        .join("");
+
+      subSigTbody.querySelectorAll(".btn-enforce-substrate").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const sid = btn.getAttribute("data-signal-id");
+          const res = await fetch("/api/substrate/enforce-policy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ signal_id: sid, action: "ENFORCE_HAIKU_FLASH_ROUTING" }),
+          });
+          const out = await res.json();
+          showToast(out.message);
+          fetchDashboard();
+        });
+      });
+    }
+
+    const subWorkTbody = document.getElementById("obs-substrate-workloads-tbody");
+    if (subWorkTbody && sub.substrate_compute_workloads) {
+      subWorkTbody.innerHTML = sub.substrate_compute_workloads
+        .map(
+          (w) => `
+        <tr>
+          <td class="mono"><strong>${w.workload_id}</strong></td>
+          <td><strong>${w.workload_name}</strong></td>
+          <td><span class="badge badge-sky">${w.cloud_provider}</span></td>
+          <td class="mono" style="font-size:12px">${(w.served_models || []).join(", ")}</td>
+          <td class="mono">${w.p95_inference_ms} ms</td>
+          <td class="mono">${fmtInt(w.throughput_tok_sec)} tok/s</td>
+          <td class="mono">${fmtUSD(w.monthly_compute_spend_usd)}</td>
+          <td class="mono">${w.linked_releases}</td>
+          <td><span class="badge ${w.roi_multiple < 1 ? "badge-danger" : "badge-success"}">${w.roi_multiple}x</span></td>
+        </tr>`
+        )
+        .join("");
+    }
+
+    const nrApmTbody = document.getElementById("obs-nr-apm-tbody");
+    if (nrApmTbody && nr.apm_services) {
+      nrApmTbody.innerHTML = nr.apm_services
+        .map(
+          (a) => `
+        <tr>
+          <td><strong>${a.service_name}</strong><br/><span style="font-size:11px;color:var(--text-muted)">${a.cicd_source}</span></td>
+          <td class="mono"><strong>${a.apdex_score}</strong></td>
+          <td class="mono">${a.response_time_p95_ms} ms <span class="badge ${a.latency_delta_pct < 0 ? "badge-success" : "badge-danger"}">${a.latency_delta_pct}%</span></td>
+          <td class="mono">${a.error_rate_pct}%</td>
+          <td class="mono">${a.release_id}<br/><span style="font-size:11px;color:var(--text-secondary)">${a.llm_contributor}</span></td>
+        </tr>`
+        )
+        .join("");
+    }
+
+    const nrModTbody = document.getElementById("obs-nr-models-tbody");
+    if (nrModTbody && nr.ai_monitoring_models) {
+      nrModTbody.innerHTML = nr.ai_monitoring_models
+        .map(
+          (m) => `
+        <tr>
+          <td class="mono"><strong>${m.model}</strong><br/><span style="font-size:11px;color:var(--text-muted)">${m.provider}</span></td>
+          <td class="mono">${fmtInt(m.requests_24h)}</td>
+          <td class="mono">${fmtInt(m.tokens_24h)}</td>
+          <td class="mono"><strong>${fmtUSD(m.cost_24h_usd)}</strong></td>
+          <td><span class="badge ${m.primary_attribution.includes("LOW-VALUE") ? "badge-danger" : "badge-success"}">${m.primary_attribution}</span></td>
+        </tr>`
+        )
+        .join("");
+    }
+
+    const solTbody = document.getElementById("obs-soluble-findings-tbody");
+    if (solTbody && sol.security_findings) {
+      solTbody.innerHTML = sol.security_findings
+        .map(
+          (f) => `
+        <tr>
+          <td class="mono"><strong>${f.finding_id}</strong><br/><span style="font-size:11px;color:var(--text-muted)">${f.rule_id}</span></td>
+          <td><span class="badge ${f.severity === "CRITICAL" ? "badge-danger" : "badge-amber"}">${f.severity}</span></td>
+          <td><span class="badge badge-sky">${f.iac_type}</span></td>
+          <td><strong>${f.title}</strong><br/><span style="font-size:11.5px;color:var(--text-secondary)">${f.policy_framework}</span></td>
+          <td class="mono">${f.repository}<br/><span style="font-size:11px;color:var(--text-muted)">${f.ci_pipeline} (${f.commit_sha})</span></td>
+          <td>${f.author_attribution}</td>
+          <td><span class="badge badge-success">${f.status} (${f.remediation_time_mins}m)</span></td>
+        </tr>`
+        )
+        .join("");
+    }
+  }
+
+  async function executeObservabilityQuery(engine, query) {
+    const res = await fetch("/api/observability/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ engine, query }),
+    });
+    const out = await res.json();
+    const insightBar = document.getElementById("obs-query-insight-bar");
+    if (insightBar) {
+      insightBar.textContent = `[${out.engine.toUpperCase()} • ${out.row_count} rows • ${out.execution_time_ms}ms] ${out.finops_insight}`;
+    }
+    const rows = out.rows || [];
+    const cols = rows.length > 0 ? Object.keys(rows[0]) : [];
+    const thead = document.getElementById("obs-query-thead");
+    const tbody = document.getElementById("obs-query-tbody");
+    if (thead && tbody) {
+      thead.innerHTML = "<tr>" + cols.map((c) => `<th>${c}</th>`).join("") + "</tr>";
+      tbody.innerHTML = rows
+        .map(
+          (r) =>
+            "<tr>" +
+            cols.map((c) => `<td class="mono">${r[c] !== undefined ? r[c] : ""}</td>`).join("") +
+            "</tr>"
+        )
+        .join("");
+    }
+  }
+
   function bindEvents() {
     document.querySelectorAll(".nav-tab").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -363,6 +580,86 @@
 
     document.getElementById("btn-goto-sage").addEventListener("click", () => activateTab("panel-sage"));
     document.getElementById("btn-goto-netsuite").addEventListener("click", () => activateTab("panel-netsuite"));
+    const btnGotoObs = document.getElementById("btn-goto-observability");
+    if (btnGotoObs) {
+      btnGotoObs.addEventListener("click", () => activateTab("panel-observability"));
+    }
+
+    // Featured 4 Vendor Handshake Buttons
+    [
+      { id: "btn-test-datadog", cid: "datadog", label: "Datadog (api.datadoghq.com)" },
+      { id: "btn-test-substrate", cid: "substrate", label: "Substrate (substrate.office.com & api.substrate.run)" },
+      { id: "btn-test-newrelic", cid: "newrelic", label: "New Relic (api.newrelic.com / NerdGraph)" },
+      { id: "btn-test-soluble", cid: "soluble", label: "Soluble Cloud-Native IaC (api.soluble.io)" },
+    ].forEach((item) => {
+      const btn = document.getElementById(item.id);
+      if (btn) {
+        btn.addEventListener("click", async () => {
+          const res = await fetch(`/api/connectors/${item.cid}/test`, { method: "POST" });
+          const out = await res.json();
+          showToast(`Verified ${item.label} via ${out.routed_via || "Mock Gateway"} — Status: ${out.status}`);
+        });
+      }
+    });
+
+    const btnTestAll = document.getElementById("btn-test-all-23-connectors");
+    if (btnTestAll) {
+      btnTestAll.addEventListener("click", async () => {
+        const res = await fetch("/api/connectors/test-all", { method: "POST" });
+        const out = await res.json();
+        showToast(`Verified ${out.passed_count}/${out.tested_count} Enterprise Handshakes (Datadog, Substrate, New Relic, Soluble, Sage, NetSuite & more)`);
+      });
+    }
+
+    const btnRunObsQuery = document.getElementById("btn-run-obs-query");
+    if (btnRunObsQuery) {
+      btnRunObsQuery.addEventListener("click", () => {
+        const engine = document.getElementById("obs-query-engine").value;
+        const query = document.getElementById("obs-query-input").value;
+        executeObservabilityQuery(engine, query);
+      });
+    }
+
+    document.querySelectorAll(".obs-query-preset").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const engine = btn.getAttribute("data-engine");
+        const query = btn.getAttribute("data-query");
+        document.getElementById("obs-query-engine").value = engine;
+        document.getElementById("obs-query-input").value = query;
+        executeObservabilityQuery(engine, query);
+      });
+    });
+
+    const formSolubleScan = document.getElementById("form-soluble-scan");
+    if (formSolubleScan) {
+      formSolubleScan.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const iac_type = document.getElementById("soluble-iac-type").value;
+        const llm_author = document.getElementById("soluble-llm-author").value;
+        const code_snippet = document.getElementById("soluble-code-input").value;
+        const res = await fetch("/api/soluble/scan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            iac_type,
+            llm_author,
+            repository: "HayfordMD/burniq-payments-infra",
+            branch: "feat/ai-generated-infra",
+            code_snippet,
+          }),
+        });
+        const out = await res.json();
+        const box = document.getElementById("soluble-scan-result-box");
+        const meta = document.getElementById("soluble-scan-meta");
+        const pre = document.getElementById("soluble-scan-remediated-pre");
+        if (box && meta && pre) {
+          box.style.display = "block";
+          meta.textContent = `${out.scanner} • Found ${out.findings_count} policy issues • Gate: ${out.gate_decision} • Saved $${out.workday_secops_savings_usd} Workday SecOps time`;
+          pre.textContent = out.remediated_code;
+        }
+        showToast(`Soluble IaC Scan Complete: ${out.findings_count} findings auto-remediated`);
+      });
+    }
 
     document.getElementById("btn-test-sage-conn").addEventListener("click", async () => {
       const res = await fetch("/mock-enterprise/api.intacct.com/ia/api/v1/connection");
@@ -446,9 +743,13 @@
 
     document.getElementById("btn-reset-demo").addEventListener("click", async () => {
       await fetch("/api/reset", { method: "POST" });
-      showToast("Reset BurnIQ telemetry, Sage Intacct & Oracle NetSuite ledgers to baseline");
+      showToast("Reset BurnIQ telemetry, Observability, Sage Intacct & Oracle NetSuite ledgers to baseline");
       fetchDashboard();
       executeSuiteQL(document.getElementById("suiteql-query-input").value);
+      executeObservabilityQuery(
+        document.getElementById("obs-query-engine").value,
+        document.getElementById("obs-query-input").value
+      );
     });
   }
 
@@ -456,5 +757,9 @@
     bindEvents();
     fetchDashboard();
     executeSuiteQL(document.getElementById("suiteql-query-input").value);
+    executeObservabilityQuery(
+      document.getElementById("obs-query-engine").value,
+      document.getElementById("obs-query-input").value
+    );
   });
 })();

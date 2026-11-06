@@ -13,20 +13,36 @@
       <div class="brand-cluster">
         <div class="brand-mark" aria-hidden="true">BQ</div>
         <div class="brand-title-wrap">
-          <h1>BurnIQ Enterprise Telemetry &amp; ERP Financial Attribution</h1>
+          <h1>BurnIQ Enterprise Telemetry, Observability, SecOps &amp; ERP Attribution</h1>
           <div class="brand-subtitle">
-            Claude &amp; Gemini Token Burn &rarr; Git / CI-CD Releases &rarr; Jira &amp; Workday HCM &rarr; Sage Intacct &amp; Oracle NetSuite OneWorld GL
+            Claude &amp; Gemini &rarr; Datadog, Substrate, New Relic &amp; Soluble &rarr; Git / CI-CD / Jira &rarr; Workday HCM, Sage Intacct &amp; Oracle NetSuite
           </div>
         </div>
       </div>
       <div class="header-badges">
+        <span class="erp-pill datadog" id="header-datadog-pill">
+          <span class="status-dot"></span>
+          Datadog: CONNECTED
+        </span>
+        <span class="erp-pill substrate" id="header-substrate-pill">
+          <span class="status-dot"></span>
+          Substrate: CONNECTED
+        </span>
+        <span class="erp-pill newrelic" id="header-newrelic-pill">
+          <span class="status-dot"></span>
+          New Relic: CONNECTED
+        </span>
+        <span class="erp-pill soluble" id="header-soluble-pill">
+          <span class="status-dot"></span>
+          Soluble IaC: CONNECTED
+        </span>
         <span class="erp-pill sage" id="header-sage-pill">
           <span class="status-dot"></span>
           Sage Intacct &amp; X3: CONNECTED
         </span>
         <span class="erp-pill netsuite" id="header-netsuite-pill">
           <span class="status-dot"></span>
-          Oracle NetSuite OneWorld: CONNECTED
+          Oracle NetSuite: CONNECTED
         </span>
         <button class="btn" id="btn-reset-demo" type="button">Reset Baseline Data</button>
       </div>
@@ -34,7 +50,10 @@
 
     <nav class="nav-bar" aria-label="Primary Platform Navigation">
       <button class="nav-tab active" id="nav-tab-overview" data-target="panel-overview" type="button">
-        Executive &amp; Dual-ERP Overview
+        Executive &amp; Telemetry Overview
+      </button>
+      <button class="nav-tab" id="nav-tab-observability" data-target="panel-observability" type="button">
+        Datadog &middot; Substrate &middot; New Relic &middot; Soluble <span class="tab-count" id="badge-obs-count">4 Live</span>
       </button>
       <button class="nav-tab" id="nav-tab-sage" data-target="panel-sage" type="button">
         Sage Intacct &amp; Sage X3 ERP <span class="tab-count" id="badge-sage-count">3 Entities</span>
@@ -49,7 +68,7 @@
         Low-Value Task Audit (Emails &amp; Notes)
       </button>
       <button class="nav-tab" id="nav-tab-connectors" data-target="panel-connectors" type="button">
-        Enterprise Connectors &amp; CSV <span class="tab-count" id="badge-connectors-count">16</span>
+        Enterprise Connectors &amp; CSV <span class="tab-count" id="badge-connectors-count">22</span>
       </button>
     </nav>
 
@@ -158,6 +177,9 @@
               <p>Traces every Claude &amp; Gemini token from GitHub / GitLab / Bitbucket commits and Jenkins / Bamboo builds to Sage GL &amp; Oracle NetSuite Journal Entries</p>
             </div>
             <div class="btn-row">
+              <button class="btn" id="btn-goto-observability" type="button">
+                Open Datadog &middot; Substrate &middot; New Relic &middot; Soluble Hub
+              </button>
               <button class="btn btn-primary" id="btn-overview-optimize-waste" type="button">
                 Auto-Route Low-Value Tasks &amp; Reconcile ERPs
               </button>
@@ -180,6 +202,388 @@
                 </tr>
               </thead>
               <tbody id="overview-releases-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 1B: DATADOG · SUBSTRATE · NEW RELIC · SOLUBLE HUB -->
+      <section class="tab-panel" id="panel-observability">
+        <!-- 4 Featured Vendor Cards -->
+        <div class="connector-grid">
+          <div class="connector-card" id="featured-card-datadog">
+            <div class="connector-top">
+              <div>
+                <div class="connector-name">Datadog LLM Observability, APM &amp; DORA</div>
+                <div class="connector-cat"><code class="mono">api.datadoghq.com</code> &bull; OTLP &amp; REST v2</div>
+              </div>
+              <span class="badge badge-sky">CONNECTED</span>
+            </div>
+            <div class="connector-desc" id="obs-dd-summary-text">
+              14.2/day DORA Deploy Freq &bull; 3.1% Change Failure Rate &bull; 1,842,910 LLM Spans
+            </div>
+            <div class="connector-meta">
+              <a class="btn" href="/api/export/datadog" download="burniq_datadog_export.csv">Export Spans CSV</a>
+              <button class="btn btn-primary" id="btn-test-datadog" type="button">Test Datadog Handshake</button>
+            </div>
+          </div>
+
+          <div class="connector-card" id="featured-card-substrate">
+            <div class="connector-top">
+              <div>
+                <div class="connector-name">Substrate (M365 Graph &amp; AI Compute)</div>
+                <div class="connector-cat"><code class="mono">substrate.office.com</code> &amp; <code class="mono">api.substrate.run</code></div>
+              </div>
+              <span class="badge badge-amber">CONNECTED</span>
+            </div>
+            <div class="connector-desc" id="obs-sub-summary-text">
+              $146,800/mo Low-Value Email/Notes Salary Burn Caught &bull; 5 AI Compute Fleets (91.8% Util)
+            </div>
+            <div class="connector-meta">
+              <a class="btn" href="/api/export/substrate" download="burniq_substrate_export.csv">Export Signals CSV</a>
+              <button class="btn btn-primary" id="btn-test-substrate" type="button">Test Substrate Handshake</button>
+            </div>
+          </div>
+
+          <div class="connector-card" id="featured-card-newrelic">
+            <div class="connector-top">
+              <div>
+                <div class="connector-name">New Relic APM, NerdGraph &amp; AI Monitoring</div>
+                <div class="connector-cat"><code class="mono">api.newrelic.com</code> &bull; GraphQL &amp; NRQL</div>
+              </div>
+              <span class="badge badge-success">CONNECTED</span>
+            </div>
+            <div class="connector-desc" id="obs-nr-summary-text">
+              0.97 Fleet Apdex &bull; -31.4% Release Latency Delta &bull; 61,840 AI Calls / 24h
+            </div>
+            <div class="connector-meta">
+              <a class="btn" href="/api/export/newrelic" download="burniq_newrelic_export.csv">Export APM CSV</a>
+              <button class="btn btn-primary" id="btn-test-newrelic" type="button">Test New Relic Handshake</button>
+            </div>
+          </div>
+
+          <div class="connector-card" id="featured-card-soluble">
+            <div class="connector-top">
+              <div>
+                <div class="connector-name">Soluble Cloud-Native IaC &amp; DevSecOps</div>
+                <div class="connector-cat"><code class="mono">api.soluble.io</code> &bull; Terraform / K8s / Helm / Secrets</div>
+              </div>
+              <span class="badge badge-success">CONNECTED</span>
+            </div>
+            <div class="connector-desc" id="obs-sol-summary-text">
+              96.4% AI-Assisted IaC Policy Pass Rate &bull; 11.5m Auto-Remediation MTTR
+            </div>
+            <div class="connector-meta">
+              <a class="btn" href="/api/export/soluble" download="burniq_soluble_export.csv">Export Findings CSV</a>
+              <button class="btn btn-primary" id="btn-test-soluble" type="button">Test Soluble Handshake</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cross-Platform Correlation Matrix -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Cross-Platform Correlation Matrix (Datadog + Substrate + New Relic + Soluble)</h2>
+              <p>Unified telemetry correlating LLM token spend, CI/CD release velocity, APM production golden signals, IaC security posture, and M365 email/notes waste</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-test-all-23-connectors" type="button">Verify All Enterprise Handshakes</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Correlation ID &amp; Scenario</th>
+                  <th>Datadog (LLM Obs &amp; DORA)</th>
+                  <th>New Relic (APM &amp; NRQL)</th>
+                  <th>Soluble (IaC &amp; SecOps)</th>
+                  <th>Substrate (M365 Graph &amp; Compute)</th>
+                  <th>Net Business &amp; Workday Impact</th>
+                </tr>
+              </thead>
+              <tbody id="obs-correlations-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Datadog Section -->
+        <div class="grid-2col">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2>Datadog DORA Metrics — AI-Assisted vs. Pre-AI Baseline</h2>
+                <p>Correlates Claude &amp; Gemini usage with GitHub / GitLab / Bitbucket &amp; Jenkins / Bamboo releases</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>DORA Metric</th>
+                    <th>AI-Assisted Cohort</th>
+                    <th>Pre-AI Baseline</th>
+                    <th>Delta</th>
+                    <th>Tier</th>
+                  </tr>
+                </thead>
+                <tbody id="obs-dd-dora-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2>Datadog Active APM, CI Visibility &amp; LLM Cost Monitors</h2>
+                <p>Real-time alerting on non-code Opus/Pro burn, latency SLAs &amp; container memory</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Monitor ID</th>
+                    <th>Monitor Name</th>
+                    <th>Type</th>
+                    <th>State</th>
+                    <th>Current / Threshold</th>
+                  </tr>
+                </thead>
+                <tbody id="obs-dd-monitors-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Datadog LLM Observability Trace Spans (<code class="mono">api.datadoghq.com/api/v2/llm-obs/v1/spans</code>)</h2>
+              <p>Granular trace spans linking developer prompts to Git commits, Jira keys, CI/CD releases, or low-value email/notes audit flags</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Trace ID</th>
+                  <th>Service</th>
+                  <th>Model</th>
+                  <th>Engineer &amp; Dept</th>
+                  <th>Task Category</th>
+                  <th>Tokens</th>
+                  <th>Cost</th>
+                  <th>Latency</th>
+                  <th>Git / Jira / Release</th>
+                </tr>
+              </thead>
+              <tbody id="obs-dd-spans-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Substrate Section -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Microsoft Substrate Knowledge Graph — Low-Value Email &amp; Meeting Note Signals (<code class="mono">substrate.office.com</code>)</h2>
+              <p>Audits M365 Outlook MailItems, Teams Meeting Transcripts, and Copilot Chat Threads burning frontier LLMs with zero git/release output</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Signal ID</th>
+                  <th>Substrate Channel &amp; Artifact</th>
+                  <th>Department</th>
+                  <th>Model Used</th>
+                  <th>Monthly Events</th>
+                  <th>Tokens Burned</th>
+                  <th>LLM Cost</th>
+                  <th>Workday Salary Burn</th>
+                  <th>Classification</th>
+                  <th>Governance Action</th>
+                </tr>
+              </thead>
+              <tbody id="obs-substrate-signals-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Substrate Multi-Cloud AI Compute Workloads (<code class="mono">api.substrate.run/v1/workloads</code>)</h2>
+              <p>Distributed inference &amp; agentic orchestration across AWS Bedrock, GCP Vertex AI, and Azure OpenAI</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Workload ID</th>
+                  <th>Workload Name</th>
+                  <th>Cloud Substrate</th>
+                  <th>Served Models</th>
+                  <th>p95 Latency</th>
+                  <th>Throughput</th>
+                  <th>Monthly Spend</th>
+                  <th>Linked Releases</th>
+                  <th>ROI Multiple</th>
+                </tr>
+              </thead>
+              <tbody id="obs-substrate-workloads-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- New Relic Section & Live NRQL Workbench -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>New Relic NerdGraph &amp; Unified Observability Query Console (<code class="mono">api.newrelic.com/graphql</code>)</h2>
+              <p>Run live NRQL queries against <code class="mono">Transaction</code>, <code class="mono">LlmChatCompletionSummary</code>, Datadog Spans, Substrate Graph, or Soluble IaC Findings</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn obs-query-preset" data-engine="newrelic_nrql" data-query="SELECT average(duration), apdex(duration, t: 0.08), percentage(count(*), WHERE error IS true) FROM Transaction FACET appName, releaseId, llmContributor SINCE 7 days ago" type="button">NRQL APM Golden Signals</button>
+              <button class="btn obs-query-preset" data-engine="newrelic_nrql" data-query="SELECT sum(tokenCount), sum(costUsd), average(durationMs) FROM LlmChatCompletionSummary FACET model, primaryAttribution SINCE 24 hours ago" type="button">NRQL AI Monitoring</button>
+              <button class="btn obs-query-preset" data-engine="datadog_spans" data-query="datadog llm_obs spans service:* @git.release_id:*" type="button">Datadog LLM Spans</button>
+              <button class="btn obs-query-preset" data-engine="substrate_graph" data-query="substrate.office.com/v1.0/graph/signals WHERE value_classification = 'LOW-VALUE WASTE'" type="button">Substrate Email/Notes Graph</button>
+              <button class="btn obs-query-preset" data-engine="soluble_policy" data-query="soluble iac findings WHERE severity IN ('CRITICAL', 'HIGH')" type="button">Soluble IaC Findings</button>
+            </div>
+          </div>
+          <div class="form-grid" style="grid-template-columns: 220px 1fr auto;">
+            <div class="form-field">
+              <label for="obs-query-engine">Telemetry Query Engine</label>
+              <select id="obs-query-engine">
+                <option value="newrelic_nrql">New Relic NRQL / NerdGraph</option>
+                <option value="datadog_spans">Datadog LLM Obs &amp; DORA</option>
+                <option value="substrate_graph">Substrate M365 Graph</option>
+                <option value="soluble_policy">Soluble IaC Policy Engine</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="obs-query-input">Query Expression</label>
+              <input id="obs-query-input" class="mono" type="text" value="SELECT average(duration), apdex(duration, t: 0.08), percentage(count(*), WHERE error IS true) FROM Transaction FACET appName, releaseId, llmContributor SINCE 7 days ago" />
+            </div>
+            <div class="form-field" style="justify-content: flex-end;">
+              <label>&nbsp;</label>
+              <button class="btn btn-primary" id="btn-run-obs-query" type="button">Execute Telemetry Query</button>
+            </div>
+          </div>
+          <div id="obs-query-insight-bar" style="font-size: 12.5px; color: var(--accent-emerald); font-weight: 600;"></div>
+          <div class="table-wrap">
+            <table>
+              <thead id="obs-query-thead"></thead>
+              <tbody id="obs-query-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2col">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2>New Relic APM Golden Signals by CI/CD Release</h2>
+                <p>Apdex, throughput (RPM), p95 latency delta &amp; error rates per AI-attributed release</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Service Name</th>
+                    <th>Apdex</th>
+                    <th>p95 Latency (Delta)</th>
+                    <th>Error %</th>
+                    <th>Release &amp; LLM</th>
+                  </tr>
+                </thead>
+                <tbody id="obs-nr-apm-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2>New Relic AI Monitoring (<code class="mono">LlmChatCompletionSummary</code>)</h2>
+                <p>24-hour model request volume, token consumption, error rate &amp; cost attribution</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>24h Calls</th>
+                    <th>Tokens (24h)</th>
+                    <th>Cost (24h)</th>
+                    <th>Primary Attribution</th>
+                  </tr>
+                </thead>
+                <tbody id="obs-nr-models-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soluble Section & Interactive IaC Scanner -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>Soluble Cloud-Native IaC Security &amp; Live Auto-Remediation Scanner (<code class="mono">api.soluble.io</code>)</h2>
+              <p>Scan AI-generated Terraform, Kubernetes, Helm, or Dockerfile snippets for IAM wildcards, unencrypted storage, or secrets and synthesize compliant patches</p>
+            </div>
+          </div>
+          <form id="form-soluble-scan" class="form-grid" style="grid-template-columns: 180px 220px 1fr auto;">
+            <div class="form-field">
+              <label for="soluble-iac-type">IaC Framework</label>
+              <select id="soluble-iac-type" name="iac_type">
+                <option value="Terraform">Terraform (HCL)</option>
+                <option value="Kubernetes">Kubernetes Manifest</option>
+                <option value="Helm">Helm Chart</option>
+                <option value="Dockerfile">Dockerfile</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="soluble-llm-author">LLM Co-Author</label>
+              <select id="soluble-llm-author" name="llm_author">
+                <option value="Claude 3.7 Sonnet">Claude 3.7 Sonnet</option>
+                <option value="Gemini 2.5 Pro">Gemini 2.5 Pro</option>
+                <option value="Human Engineer">Human Engineer</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="soluble-code-input">IaC Code Snippet to Audit</label>
+              <input id="soluble-code-input" class="mono" type="text" value='resource "aws_iam_policy" "settlement" { Action = "*" encrypted = false publicly_accessible = true }' />
+            </div>
+            <div class="form-field" style="justify-content: flex-end;">
+              <label>&nbsp;</label>
+              <button class="btn btn-primary" id="btn-run-soluble-scan" type="submit">Run Soluble IaC Scan</button>
+            </div>
+          </form>
+          <div id="soluble-scan-result-box" style="display:none; background: var(--bg-base); border: 1px solid var(--border-strong); border-radius: var(--radius-md); padding: 14px;">
+            <div id="soluble-scan-meta" style="font-weight: 600; color: var(--accent-emerald); margin-bottom: 8px;"></div>
+            <pre id="soluble-scan-remediated-pre" class="mono" style="font-size: 12px; color: var(--text-primary); white-space: pre-wrap;"></pre>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Finding ID &amp; Rule</th>
+                  <th>Severity</th>
+                  <th>IaC Type</th>
+                  <th>Finding Title &amp; Policy Framework</th>
+                  <th>Repo &amp; CI Pipeline</th>
+                  <th>Author Attribution</th>
+                  <th>Status &amp; MTTR</th>
+                </tr>
+              </thead>
+              <tbody id="obs-soluble-findings-tbody"></tbody>
             </table>
           </div>
         </div>

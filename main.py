@@ -1,4 +1,4 @@
-"""BurnIQ Main FastAPI Server (Port 8000) — Enterprise LLM Telemetry, Sage ERP, Oracle NetSuite & Workday ROI."""
+"""BurnIQ Main FastAPI Server (Port 8000) — Enterprise LLM Telemetry, Datadog, Substrate, New Relic, Soluble, Sage ERP, Oracle NetSuite & Workday ROI."""
 
 from __future__ import annotations
 
@@ -6,26 +6,51 @@ import os
 from datetime import datetime
 from typing import Any, Dict
 
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from burniq.data_store import store
 from mock_enterprise import mock_router
+from backend.main import (
+    ObservabilityQueryRequest,
+    SolubleScanRequest,
+    SubstratePolicyRequest,
+    CsvImportRequest,
+    api_datadog,
+    api_substrate,
+    api_newrelic,
+    api_soluble,
+    api_observability,
+    run_observability_query,
+    run_soluble_iac_scan,
+    enforce_substrate_policy,
+    api_attribution,
+    api_workday_roi,
+    api_low_value_audit,
+    api_overview,
+    test_all_connectors,
+    export_csv_dataset,
+    import_csv_dataset,
+    _probe_connector,
+)
+from backend.telemetry_data import get_enterprise_connectors
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 os.makedirs(STATIC_DIR, exist_ok=True)
 
 app = FastAPI(
-    title="BurnIQ Enterprise Telemetry, Sage & Oracle NetSuite ERP & Workday ROI Platform",
+    title="BurnIQ Enterprise Telemetry, Datadog, Substrate, New Relic, Soluble, Sage & Oracle NetSuite ERP & Workday ROI Platform",
     version="2.4.0",
     description=(
         "Full-stack corporate LLM usage attribution platform connecting Claude & Gemini token telemetry "
-        "across GitHub, GitLab, Bitbucket, Jenkins, Bamboo, and Jira directly into Workday HCM compensation, "
-        "Sage Intacct / Sage X3 General Ledger, Oracle NetSuite OneWorld SuiteTalk/SuiteQL, SAP, Salesforce, "
-        "Power BI, ServiceNow, Zendesk, and Low-Value Task Auditing."
+        "across GitHub, GitLab, Bitbucket, Jenkins, Bamboo, and Jira directly into Datadog, Substrate, "
+        "New Relic, Soluble, Workday HCM compensation, Sage Intacct / Sage X3 General Ledger, "
+        "Oracle NetSuite OneWorld SuiteTalk/SuiteQL, SAP, Salesforce, Power BI, ServiceNow, Zendesk, "
+        "PagerDuty, Opsgenie, and Low-Value Task Auditing."
     ),
 )
 
@@ -44,6 +69,12 @@ async def api_health() -> Dict[str, Any]:
         "status": "ok",
         "service": "burniq-enterprise-platform",
         "version": "2.4.0",
+        "featured_integrations": {
+            "datadog": "CONNECTED (api.datadoghq.com — LLM Obs, APM, CI Visibility, DORA)",
+            "substrate": "CONNECTED (substrate.office.com & api.substrate.run — M365 Graph Audit & AI Compute)",
+            "newrelic": "CONNECTED (api.newrelic.com — APM Golden Signals, NerdGraph, AI Monitoring, NRQL)",
+            "soluble": "CONNECTED (api.soluble.io — Cloud-Native IaC Security & PR Auto-Remediation)",
+        },
         "erp_integrations": {
             "sage": "CONNECTED (Sage Intacct REST v1 & Sage X3)",
             "oracle_netsuite": "CONNECTED (Oracle NetSuite OneWorld SuiteTalk REST & SuiteQL)",
@@ -55,21 +86,97 @@ async def api_health() -> Dict[str, Any]:
 
 @app.get("/api/dashboard")
 async def get_dashboard() -> Dict[str, Any]:
-    return store.get_dashboard_summary()
+    summary = store.get_dashboard_summary()
+    obs = await api_observability()
+    summary["observability"] = obs
+    return summary
+
+
+@app.get("/api/datadog")
+async def get_datadog_route() -> Dict[str, Any]:
+    return await api_datadog()
+
+
+@app.get("/api/substrate")
+async def get_substrate_route() -> Dict[str, Any]:
+    return await api_substrate()
+
+
+@app.get("/api/newrelic")
+async def get_newrelic_route() -> Dict[str, Any]:
+    return await api_newrelic()
+
+
+@app.get("/api/soluble")
+async def get_soluble_route() -> Dict[str, Any]:
+    return await api_soluble()
+
+
+@app.get("/api/observability")
+async def get_observability_route() -> Dict[str, Any]:
+    return await api_observability()
+
+
+@app.post("/api/observability/query")
+async def post_observability_query_route(req: ObservabilityQueryRequest) -> Dict[str, Any]:
+    return await run_observability_query(req)
+
+
+@app.post("/api/soluble/scan")
+async def post_soluble_scan_route(req: SolubleScanRequest) -> Dict[str, Any]:
+    return await run_soluble_iac_scan(req)
+
+
+@app.post("/api/substrate/enforce-policy")
+async def post_substrate_enforce_policy_route(req: SubstratePolicyRequest) -> Dict[str, Any]:
+    return await enforce_substrate_policy(req)
+
+
+@app.get("/api/attribution")
+async def get_attribution_route() -> Dict[str, Any]:
+    return await api_attribution()
+
+
+@app.get("/api/workday-roi")
+async def get_workday_roi_route() -> Dict[str, Any]:
+    return await api_workday_roi()
+
+
+@app.get("/api/low-value-audit")
+async def get_low_value_audit_observability_route() -> Dict[str, Any]:
+    return await api_low_value_audit()
+
+
+@app.get("/api/overview")
+async def get_overview_route() -> Dict[str, Any]:
+    return await api_overview()
 
 
 @app.get("/api/connectors")
 async def get_connectors() -> Dict[str, Any]:
     return {
         "count": len(store.state["connectors"]),
+        "total": len(store.state["connectors"]),
+        "featured_ids": ["datadog", "substrate", "newrelic", "soluble", "sage", "netsuite"],
         "connectors": store.state["connectors"],
     }
+
+
+@app.post("/api/connectors/test-all")
+async def post_test_all_connectors_route() -> Dict[str, Any]:
+    return await test_all_connectors()
 
 
 @app.post("/api/connectors/{connector_id}/test")
 async def test_connector(connector_id: str) -> Dict[str, Any]:
     cid = connector_id.lower()
     now_iso = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    probe_result = None
+    for tconn in get_enterprise_connectors():
+        if tconn["id"].lower() == cid:
+            probe_result = _probe_connector(tconn)
+            break
+
     for conn in store.state["connectors"]:
         if conn["id"] == cid:
             conn["status"] = "CONNECTED"
@@ -78,10 +185,16 @@ async def test_connector(connector_id: str) -> Dict[str, Any]:
             store._save()
             return {
                 "ok": True,
+                "status": "CONNECTED",
+                "connector_id": cid,
                 "connector": conn,
                 "handshake": f"Verified {conn['protocol']} handshake with {conn['endpoint']}",
+                "routed_via": probe_result["routed_via"] if probe_result else "local-mock-gateway:8000",
+                "response_payload": probe_result["response_payload"] if probe_result else {"status": "CONNECTED"},
                 "tested_at": now_iso,
             }
+    if probe_result:
+        return {"ok": True, **probe_result}
     return {
         "ok": True,
         "connector_id": connector_id,
@@ -153,6 +266,11 @@ async def export_csv_endpoint(target: str) -> PlainTextResponse:
     )
 
 
+@app.get("/api/csv/export/{dataset}")
+async def export_csv_dataset_route(dataset: str) -> Response:
+    return await export_csv_dataset(dataset)
+
+
 @app.post("/api/import/csv")
 async def import_csv_endpoint(payload: Dict[str, Any] = Body(default={})) -> Dict[str, Any]:
     csv_text = (payload or {}).get("csv_text", "")
@@ -163,10 +281,15 @@ async def import_csv_endpoint(payload: Dict[str, Any] = Body(default={})) -> Dic
     return result
 
 
+@app.post("/api/csv/import")
+async def import_csv_dataset_route(req: CsvImportRequest) -> Dict[str, Any]:
+    return await import_csv_dataset(req)
+
+
 @app.post("/api/reset")
 async def reset_demo_state() -> Dict[str, Any]:
     store.reset()
-    return store.get_dashboard_summary()
+    return await get_dashboard()
 
 
 # Mount Mock Enterprise Router under /mock-enterprise
@@ -174,8 +297,16 @@ app.include_router(mock_router, prefix="/mock-enterprise")
 
 # Mount static assets
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+if os.path.isdir(FRONTEND_DIR):
+    app.mount("/observability-static", StaticFiles(directory=FRONTEND_DIR), name="observability-static")
 
 
 @app.get("/")
 async def index_page() -> FileResponse:
     return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+
+
+@app.get("/observability-ui")
+async def observability_ui_page() -> FileResponse:
+    return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+

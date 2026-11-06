@@ -1260,6 +1260,30 @@ class EnterpriseDataStore:
                         je["memo"],
                     ]
                 )
+        elif target_key == "datadog":
+            from backend.telemetry_data import get_datadog_telemetry
+            dd = get_datadog_telemetry()
+            writer.writerow(["trace_id", "service", "provider", "model", "engineer", "department", "task_category", "total_tokens", "cost_usd", "latency_ms", "git_commit", "jira_key", "release_id"])
+            for s in dd["llm_observability_spans"]:
+                writer.writerow([s["trace_id"], s["service"], s["provider"], s["model"], s["engineer"], s["department"], s["task_category"], s["total_tokens"], s["cost_usd"], s["latency_ms"], s["git_commit"], s["jira_key"], s["release_id"]])
+        elif target_key == "substrate":
+            from backend.telemetry_data import get_substrate_telemetry
+            sub = get_substrate_telemetry()
+            writer.writerow(["signal_id", "channel", "artifact_type", "department", "llm_provider", "model", "monthly_events", "tokens_burned", "llm_cost_usd", "workday_salary_burn_usd", "value_classification"])
+            for s in sub["microsoft_substrate_signals"]:
+                writer.writerow([s["signal_id"], s["channel"], s["artifact_type"], s["department"], s["llm_provider"], s["model"], s["monthly_events"], s["tokens_burned"], s["llm_cost_usd"], s["workday_salary_burn_usd"], s["value_classification"]])
+        elif target_key == "newrelic":
+            from backend.telemetry_data import get_newrelic_telemetry
+            nr = get_newrelic_telemetry()
+            writer.writerow(["app_id", "service_name", "tier", "apdex_score", "throughput_rpm", "response_time_p95_ms", "error_rate_pct", "latency_delta_pct", "release_id", "cicd_source", "llm_contributor"])
+            for a in nr["apm_services"]:
+                writer.writerow([a["app_id"], a["service_name"], a["tier"], a["apdex_score"], a["throughput_rpm"], a["response_time_p95_ms"], a["error_rate_pct"], a["latency_delta_pct"], a["release_id"], a["cicd_source"], a["llm_contributor"]])
+        elif target_key == "soluble":
+            from backend.telemetry_data import get_soluble_telemetry
+            sol = get_soluble_telemetry()
+            writer.writerow(["finding_id", "rule_id", "severity", "iac_type", "title", "repository", "branch", "commit_sha", "ci_pipeline", "policy_framework", "status", "remediation_time_mins"])
+            for f in sol["security_findings"]:
+                writer.writerow([f["finding_id"], f["rule_id"], f["severity"], f["iac_type"], f["title"], f["repository"], f["branch"], f["commit_sha"], f["ci_pipeline"], f["policy_framework"], f["status"], f["remediation_time_mins"]])
         else:
             writer.writerow(
                 [
