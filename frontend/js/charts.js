@@ -93,8 +93,8 @@ window.BurnIQCharts = (function () {
       const y = padTop + (plotH / steps) * i;
       const val = Math.round(maxVal - (maxVal / steps) * i);
       gridSvg += `
-        <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" stroke="rgba(148,163,184,0.13)" stroke-dasharray="3,3" />
-        <text x="${padLeft - 8}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="10.5" font-family="monospace">${val}</text>
+        <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" stroke="var(--border-default)" stroke-dasharray="3,3" />
+        <text x="${padLeft - 8}" y="${y + 4}" text-anchor="end" fill="var(--text-muted)" font-size="10.5" font-family="monospace">${val}</text>
       `;
     }
 
@@ -103,7 +103,7 @@ window.BurnIQCharts = (function () {
     const n = labels.length;
     labels.forEach((lbl, idx) => {
       const x = padLeft + (n > 1 ? (plotW / (n - 1)) * idx : plotW / 2);
-      xSvg += `<text x="${x}" y="${height - 8}" text-anchor="middle" fill="#94a3b8" font-size="10.5" font-family="monospace">${escapeHtml(lbl)}</text>`;
+      xSvg += `<text x="${x}" y="${height - 8}" text-anchor="middle" fill="var(--text-muted)" font-size="10.5" font-family="monospace">${escapeHtml(lbl)}</text>`;
     });
 
     // Series paths
@@ -126,7 +126,7 @@ window.BurnIQCharts = (function () {
 
       pts.forEach((p) => {
         pathsSvg += `
-          <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.6" fill="${escapeHtml(s.color)}" stroke="#0b1017" stroke-width="1.5">
+          <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.6" fill="${escapeHtml(s.color)}" stroke="var(--bg-surface)" stroke-width="1.5">
             <title>${escapeHtml(s.name)}: ${p.v} ${escapeHtml(s.unit || "")}</title>
           </circle>
         `;
@@ -170,8 +170,8 @@ window.BurnIQCharts = (function () {
       const y = padTop + (plotH / steps) * i;
       const val = Math.round(maxVal - (maxVal / steps) * i);
       gridSvg += `
-        <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" stroke="rgba(148,163,184,0.13)" stroke-dasharray="3,3" />
-        <text x="${padLeft - 8}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="10.5" font-family="monospace">${val}</text>
+        <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" stroke="var(--border-default)" stroke-dasharray="3,3" />
+        <text x="${padLeft - 8}" y="${y + 4}" text-anchor="end" fill="var(--text-muted)" font-size="10.5" font-family="monospace">${val}</text>
       `;
     }
 
@@ -197,7 +197,7 @@ window.BurnIQCharts = (function () {
         `;
       });
 
-      barsSvg += `<text x="${groupCenter.toFixed(1)}" y="${height - 10}" text-anchor="middle" fill="#94a3b8" font-size="10.5" font-family="monospace">${escapeHtml(lbl)}</text>`;
+      barsSvg += `<text x="${groupCenter.toFixed(1)}" y="${height - 10}" text-anchor="middle" fill="var(--text-muted)" font-size="10.5" font-family="monospace">${escapeHtml(lbl)}</text>`;
     });
 
     return `

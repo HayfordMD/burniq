@@ -1,24 +1,24 @@
 /* BurnIQ Enterprise Telemetry, Observability (Datadog, Substrate, New Relic, Soluble) & ROI Platform */
 :root {
-  --bg-canvas: #070b12;
-  --bg-surface: #0d1420;
-  --bg-elevated: #121c2d;
-  --bg-hover: #17243a;
-  --border-subtle: #1e2d45;
-  --border-strong: #2b4163;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent-emerald: #10b981;
-  --accent-emerald-dim: rgba(16, 185, 129, 0.14);
-  --accent-cyan: #06b6d4;
-  --accent-cyan-dim: rgba(6, 182, 212, 0.14);
-  --accent-cobalt: #3b82f6;
-  --accent-cobalt-dim: rgba(59, 130, 246, 0.14);
-  --accent-amber: #f59e0b;
-  --accent-amber-dim: rgba(245, 158, 11, 0.14);
-  --accent-coral: #f43f5e;
-  --accent-coral-dim: rgba(244, 63, 94, 0.14);
+  --bg-canvas: #F8FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #F1F5F9;
+  --bg-hover: #EDF2F7;
+  --border-subtle: #E2E8F0;
+  --border-strong: #CBD5E1;
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --accent-emerald: #15803D;
+  --accent-emerald-dim: rgba(21, 128, 61, 0.12);
+  --accent-cyan: #0369A1;
+  --accent-cyan-dim: rgba(3, 105, 161, 0.12);
+  --accent-cobalt: #1E40AF;
+  --accent-cobalt-dim: rgba(30, 64, 175, 0.12);
+  --accent-amber: #B45309;
+  --accent-amber-dim: rgba(180, 83, 9, 0.12);
+  --accent-coral: #B91C1C;
+  --accent-coral-dim: rgba(185, 28, 28, 0.12);
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -51,8 +51,7 @@ body {
 
 /* Header & Top Bar */
 .app-header {
-  background: rgba(13, 20, 32, 0.94);
-  backdrop-filter: blur(12px);
+  background: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle);
   position: sticky;
   top: 0;
