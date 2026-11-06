@@ -1397,7 +1397,21 @@ async def reset_demo_state() -> Dict[str, Any]:
 
 
 # -----------------------------------------------------------------------------
-# 5. Serve Static Frontend
+# 5. Include PagerDuty & Opsgenie Incident Routes from app.main
+# -----------------------------------------------------------------------------
+try:
+    from app.main import app as pd_og_app
+
+    existing_paths = {getattr(r, "path", None) for r in app.routes}
+    for route in pd_og_app.routes:
+        r_path = getattr(route, "path", None)
+        if r_path and r_path not in existing_paths and r_path.startswith("/api/"):
+            app.routes.append(route)
+except Exception:
+    pass
+
+# -----------------------------------------------------------------------------
+# 6. Serve Static Frontend
 # -----------------------------------------------------------------------------
 if os.path.isdir(STATIC_DIR):
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -1409,4 +1423,5 @@ if os.path.isdir(FRONTEND_DIR):
     @app.get("/")
     def serve_index() -> FileResponse:
         return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+
 
