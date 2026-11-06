@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BurnIQ — Enterprise AI Telemetry, Service Connection Control &amp; Flash 3-8 Fast Lite RAG Platform</title>
+  <meta name="description" content="BurnIQ Enterprise AI Telemetry &amp; FinOps Platform: Turn service connections ON and OFF in real time, monitor Technical Ops, Developer, Manager, and C-Suite metric dashboards, and query the RAG-trained Google Flash 3-8 Fast Lite LLM." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <!-- Sticky Enterprise Navigation Header -->
+  <header class="app-header" id="burniq-top-header">
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-mark" aria-hidden="true">BIQ</div>
+        <div>
+          <div class="brand-title">
+            <span>BurnIQ Enterprise</span>
+            <span class="nav-badge" id="header-model-badge">Flash 3-8 Fast Lite RAG</span>
+          </div>
+          <span class="brand-subtitle">Service Connection Control · Multi-Persona Telemetry · Hybrid RAG Intelligence</span>
+        </div>
+      </div>
+
+      <nav class="primary-nav" aria-label="Primary Platform Navigation">
+        <button type="button" class="nav-tab active" id="nav-tab-dashboards" data-view="dashboards">
+          <span>Persona Dashboards</span>
+          <span class="nav-badge" id="badge-active-persona">C-Suite</span>
+        </button>
+        <button type="button" class="nav-tab" id="nav-tab-connections" data-view="connections">
+          <span>Service Connections (ON/OFF)</span>
+          <span class="nav-badge" id="badge-connections-count">15/16 ON</span>
+        </button>
+        <button type="button" class="nav-tab" id="nav-tab-search-rag" data-view="search-rag">
+          <span>Search &amp; Flash-Lite RAG LLM</span>
+          <span class="nav-badge amber" id="badge-rag-docs">28 Chunks</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="quick-search-trigger" id="btn-header-quick-search" title="Jump to Enterprise Hybrid Search &amp; Flash-Lite RAG">
+          <span>Search &amp; Ask Flash-Lite...</span>
+          <kbd class="kbd-shortcut">Ctrl+K</kbd>
+        </button>
+        <button type="button" class="btn btn-sm" id="btn-theme-toggle" title="Switch Dark / Light Surface Theme">
+          <span id="theme-toggle-label">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Service Connection Quick-Toggle Strip (Always Accessible) -->
+  <section class="connection-quick-strip" aria-label="Live Service Connection Circuit Strip">
+    <div class="quick-strip-inner">
+      <div class="strip-status-summary">
+        <span class="status-dot online" id="strip-global-dot"></span>
+        <strong id="strip-online-summary">15 / 16 Connectors ON</strong>
+        <span id="strip-throughput-summary" class="tabular-nums">(54,190 ev/hr)</span>
+      </div>
+      <div class="strip-pills-scroll" id="quick-strip-pills">
+        <!-- Populated dynamically with 1-click ON/OFF connector pills -->
+      </div>
+      <div style="display:flex;gap:0.4rem;">
+        <button type="button" class="btn btn-sm btn-emerald" id="btn-strip-all-on">All ON</button>
+        <button type="button" class="btn btn-sm btn-coral-subtle" id="btn-strip-all-off">All OFF</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Workspace -->
+  <main class="main-container" id="burniq-main-workspace">
+
+    <!-- ====================================================================
+         VIEW 1: MULTI-PERSONA CHARTS & METRIC DASHBOARDS
+         (Technical Ops, Developers, Managers, C-Suite)
+         ==================================================================== -->
+    <section id="view-dashboards" class="workspace-view">
+      <!-- 4 Role-Based Persona Selector Cards -->
+      <div class="persona-switcher-bar" role="tablist" aria-label="Organizational Persona Dashboards">
+        <button type="button" class="persona-card-btn" id="persona-btn-techops" data-persona="techops" role="tab" aria-selected="false">
+          <div class="persona-card-top">
+            <span class="persona-role-tag">01 · Technical Ops &amp; SRE</span>
+            <span class="code-badge">Infra &amp; Latency</span>
+          </div>
+          <div class="persona-card-title">Technical Ops Dashboard</div>
+          <div class="persona-card-desc">Connector uptime, ingestion ev/min, Flash 3-8 Lite P95 latency &amp; ServiceNow MTTR</div>
+        </button>
+
+        <button type="button" class="persona-card-btn" id="persona-btn-developers" data-persona="developers" role="tab" aria-selected="false">
+          <div class="persona-card-top">
+            <span class="persona-role-tag">02 · Developers &amp; Architects</span>
+            <span class="code-badge">Code -> Release</span>
+          </div>
+          <div class="persona-card-title">Developers Dashboard</div>
+          <div class="persona-card-desc">GitHub/GitLab/Bitbucket commit attribution, PR cycle time &amp; Jenkins/Bamboo CI pass rate</div>
+        </button>
+
+        <button type="button" class="persona-card-btn" id="persona-btn-managers" data-persona="managers" role="tab" aria-selected="false">
+          <div class="persona-card-top">
+            <span class="persona-role-tag">03 · Engineering Managers</span>
+            <span class="code-badge">Velocity &amp; Audit</span>
+          </div>
+          <div class="persona-card-title">Managers Dashboard</div>
+          <div class="persona-card-desc">Jira sprint story points, hours reclaimed &amp; high-value vs low-value email/notes audit</div>
+        </button>
+
+        <button type="button" class="persona-card-btn active" id="persona-btn-csuite" data-persona="csuite" role="tab" aria-selected="true">
+          <div class="persona-card-top">
+            <span class="persona-role-tag">04 · C-Suite &amp; FinOps</span>
+            <span class="code-badge">5.4x Net ROI</span>
+          </div>
+          <div class="persona-card-title">C-Suite Executive Dashboard</div>
+          <div class="persona-card-desc">Workday payroll ROI, SAP cost center variance &amp; Google Flash 3-8 Fast Lite savings</div>
+        </button>
+      </div>
+
+      <!-- Active Persona Header & Global Filters -->
+      <div class="view-header-bar" style="margin-top:1.15rem;">
+        <div class="view-heading-group">
+          <h1 id="dashboard-main-title">C-Suite Executive Boardroom — Workday Payroll ROI, SAP FinOps &amp; Strategic AI Yield</h1>
+          <p id="dashboard-main-subtitle">Consolidated CFO/CTO/CEO view of net enterprise AI ROI, Workday salary hours reclaimed, SAP cost-center variance, and Google Flash 3-8 Fast Lite savings.</p>
+        </div>
+        <div class="view-controls-group">
+          <label for="select-dashboard-department" style="font-size:0.78rem;color:var(--text-muted);">Department:</label>
+          <select id="select-dashboard-department" class="select-control" aria-label="Filter by Department">
+            <option value="all">All Enterprise Departments</option>
+          </select>
+
+          <label for="select-dashboard-timeframe" style="font-size:0.78rem;color:var(--text-muted);">Window:</label>
+          <select id="select-dashboard-timeframe" class="select-control" aria-label="Select Timeframe">
+            <option value="24h">Last 24 Hours</option>
+            <option value="7d">Last 7 Days</option>
+            <option value="30d" selected>Last 30 Days (Monthly)</option>
+            <option value="90d">Last 90 Days (Quarterly)</option>
+            <option value="12m">Trailing 12 Months</option>
+          </select>
+
+          <button type="button" class="btn btn-amber" id="btn-ask-persona-ai">
+            <span>Analyze View with Flash 3-8 Lite</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 6 Top-Line KPI Cards -->
+      <div class="kpi-grid" id="dashboard-kpi-grid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- 4 Interactive Charts (2x2 Grid) -->
+      <div class="charts-grid" id="dashboard-charts-grid" style="margin-top:1.25rem;">
+        <!-- Rendered dynamically via BurnIQCharts -->
+      </div>
+
+      <!-- C-Suite & FinOps Interactive Lightweight Model Routing Simulator -->
+      <div class="simulator-panel" id="finops-scenario-simulator" style="margin-top:1.25rem;">
+        <div class="chart-header">
+          <div>
+            <h2 class="chart-title">Interactive FinOps &amp; Google Flash 3-8 Fast Lite Routing Simulator</h2>
+            <p class="chart-subtitle">Simulate annual savings, token unit cost, and Workday payroll ROI by adjusting the share of enterprise RAG &amp; telemetry traffic routed to Google Flash 3-8 Fast Lite ($0.035/1M tokens).</p>
+          </div>
+          <span class="code-badge" id="sim-model-badge">Active Model: google/gemini-3-8-flash-lite</span>
+        </div>
+        <div class="simulator-grid">
+          <div class="slider-group">
+            <div class="slider-row">
+              <label for="slider-flash-share">
+                <span>Traffic Routed to Google Flash 3-8 Fast Lite</span>
+                <strong id="val-flash-share" class="tabular-nums" style="color:var(--accent-emerald);">78%</strong>
+              </label>
+              <input type="range" id="slider-flash-share" min="0" max="95" value="78" />
+            </div>
+            <div class="slider-row">
+              <label for="slider-eng-headcount">
+                <span>Active Technical &amp; Ops Headcount (Workday Bands)</span>
+                <strong id="val-eng-headcount" class="tabular-nums" style="color:var(--accent-cyan);">69 seats</strong>
+              </label>
+              <input type="range" id="slider-eng-headcount" min="15" max="350" value="69" />
+            </div>
+          </div>
+          <div class="kpi-grid" style="grid-template-columns:repeat(4, 1fr);">
+            <div class="kpi-card">
+              <span class="kpi-label">Projected Monthly Burn</span>
+              <span class="kpi-value" id="sim-monthly-burn">$25,340</span>
+              <span class="kpi-subvalue">vs $60,160 unoptimized</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Annualized Flash-Lite Savings</span>
+              <span class="kpi-value" id="sim-annual-savings" style="color:var(--accent-emerald);">$417,840</span>
+              <span class="kpi-subvalue">Direct token FinOps yield</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Workday Value Reclaimed</span>
+              <span class="kpi-value" id="sim-workday-value">$286,235/mo</span>
+              <span class="kpi-subvalue">Verified hourly band ROI</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Net ROI Multiple</span>
+              <span class="kpi-value" id="sim-roi-multiple" style="color:var(--accent-amber);">5.4x</span>
+              <span class="kpi-subvalue">Payback &lt; 6 days</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Persona Telemetry Table -->
+      <div class="data-table-panel" style="margin-top:1.25rem;">
+        <div class="chart-header">
+          <div>
+            <h2 class="chart-title" id="dashboard-table-title">Executive Business Unit FinOps &amp; Workday Salary ROI Ledger</h2>
+            <p class="chart-subtitle">Live records synchronized from active enterprise service connections</p>
+          </div>
+          <button type="button" class="btn btn-sm" id="btn-export-table-csv">Export CSV</button>
+        </div>
+        <div class="table-scroll" id="dashboard-table-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 2: SERVICE CONNECTIONS CONTROL CENTER (TURN ON / OFF)
+         ==================================================================== -->
+    <section id="view-connections" class="workspace-view" style="display:none;">
+      <div class="view-header-bar">
+        <div class="view-heading-group">
+          <h1>Enterprise Service Connection Control Center (Turn ON / OFF)</h1>
+          <p>Individually or bulk-toggle each of the 16 enterprise service connections. Turning a connection OFF immediately pauses webhook ingestion, halts token spend, updates all 4 persona dashboards, and isolates its live stream from RAG retrieval.</p>
+        </div>
+        <div class="view-controls-group">
+          <select id="select-conn-category" class="select-control" aria-label="Filter Connections by Category">
+            <option value="all">All Categories (16)</option>
+            <option value="LLM Gateways">LLM Gateways</option>
+            <option value="Source Control">Source Control (GitHub/GitLab/Bitbucket)</option>
+            <option value="CI/CD Pipelines">CI/CD Pipelines (Jenkins/Bamboo)</option>
+            <option value="Issue & ITSM">Issue &amp; ITSM (Jira/ServiceNow/Zendesk)</option>
+            <option value="ERP / HR / CRM">ERP / HR / CRM (Workday/Salesforce/SAP)</option>
+            <option value="BI & Ingestion">BI &amp; Ingestion (Power BI/Email/CSV)</option>
+          </select>
+
+          <select id="select-conn-status" class="select-control" aria-label="Filter Connections by Status">
+            <option value="all">All Circuit States</option>
+            <option value="online">ON (Online Only)</option>
+            <option value="paused">OFF (Paused Only)</option>
+          </select>
+
+          <button type="button" class="btn btn-emerald" id="btn-bulk-turn-on">Turn Category / All ON</button>
+          <button type="button" class="btn btn-coral-subtle" id="btn-bulk-turn-off">Turn Category / All OFF</button>
+        </div>
+      </div>
+
+      <!-- Connection Summary Banner -->
+      <div class="kpi-grid" id="connections-summary-kpis" style="margin-bottom:1.25rem;">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- 16 Service Connection Cards Grid -->
+      <div class="connections-grid" id="connections-cards-grid">
+        <!-- Populated dynamically with tactile ON/OFF switches -->
+      </div>
+
+      <!-- Connection Circuit Event Audit Log -->
+      <div class="data-table-panel" style="margin-top:1.25rem;">
+        <div class="chart-header">
+          <div>
+            <h2 class="chart-title">Service Connection Circuit Toggle &amp; Health Check Audit Trail</h2>
+            <p class="chart-subtitle">Real-time log of every ON/OFF state change, diagnostic ping, and RAG document sync</p>
+          </div>
+        </div>
+        <div class="table-scroll" id="connection-events-table-wrap">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 3: ROBUST HYBRID SEARCH & CUSTOMIZED RAG-TRAINED LLM STUDIO
+         (Google Flash 3-8 Fast Lite)
+         ==================================================================== -->
+    <section id="view-search-rag" class="workspace-view" style="display:none;">
+      <div class="view-header-bar">
+        <div class="view-heading-group">
+          <h1>Unified Enterprise Search &amp; Google Flash 3-8 Fast Lite RAG Studio</h1>
+          <p>Hybrid BM25 + 64-Dim SVD Vector Search across all active service connections, paired with our custom RAG-trained lightweight LLM (<code>google/gemini-3-8-flash-lite</code> at $0.035/1M tokens, 94ms avg TTFT).</p>
+        </div>
+        <div class="view-controls-group">
+          <button type="button" class="btn btn-emerald" id="btn-train-rag-adapter">
+            <span>Calibrate &amp; Train Flash-Lite RAG Adapter</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="rag-studio-layout">
+        <!-- LEFT COLUMN: ROBUST HYBRID ENTERPRISE SEARCH -->
+        <div class="studio-column">
+          <div class="chart-panel">
+            <div class="chart-header">
+              <div>
+                <h2 class="chart-title">Enterprise Hybrid Search (BM25 Lexical + Dense Vector Cosine)</h2>
+                <p class="chart-subtitle" id="search-index-status-line">Searching across 28 RAG chunks &amp; live telemetry records from active (ON) connectors</p>
+              </div>
+              <span class="code-badge" id="search-latency-badge">1.8 ms</span>
+            </div>
+
+            <div class="search-box-row">
+              <input
+                type="search"
+                id="search-query-input"
+                class="input-control"
+                placeholder="Search commits, Jira epics, Workday ROI, ServiceNow P1s, Flash-Lite savings, low-value email audits..."
+                value=""
+              />
+              <button type="button" class="btn btn-amber" id="btn-run-search">Search</button>
+            </div>
+
+            <div class="search-filters-row">
+              <select id="search-filter-persona" class="select-control" aria-label="Filter Search by Persona">
+                <option value="all">All Personas</option>
+                <option value="techops">Technical Ops &amp; SRE</option>
+                <option value="developers">Developers</option>
+                <option value="managers">Managers</option>
+                <option value="csuite">C-Suite Executive</option>
+              </select>
+
+              <select id="search-filter-type" class="select-control" aria-label="Filter Search by Source Type">
+                <option value="all">All Artifact Types</option>
+                <option value="rag_knowledge">RAG Architecture &amp; Runbooks</option>
+                <option value="workday_roi">Workday Salary ROI</option>
+                <option value="code_commit">Git Commits &amp; PRs</option>
+                <option value="ci_release">Jenkins / Bamboo Releases</option>
+                <option value="jira_sprint">Jira Sprints &amp; Epics</option>
+                <option value="incident_ops">ServiceNow &amp; Zendesk Ops</option>
+                <option value="finops_sap">SAP &amp; Salesforce FinOps</option>
+                <option value="low_value_audit">Low-Value Email/Notes Audit</option>
+              </select>
+
+              <select id="search-filter-sort" class="select-control" aria-label="Sort Search Results">
+                <option value="hybrid">Sort: Hybrid Score (BM25 + Vector)</option>
+                <option value="semantic">Sort: Semantic Vector Cosine</option>
+                <option value="bm25">Sort: Lexical BM25</option>
+                <option value="recent">Sort: Most Recent</option>
+              </select>
+
+              <label class="rag-checkbox-label" for="chk-search-active-only">
+                <input type="checkbox" id="chk-search-active-only" checked />
+                <span>Only Active (ON) Connections</span>
+              </label>
+            </div>
+
+            <div id="search-excluded-banner" style="display:none;font-size:0.78rem;padding:0.5rem 0.75rem;border-radius:6px;background:var(--accent-amber-soft);color:var(--accent-amber);"></div>
+
+            <div class="search-results-list" id="search-results-container">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- CUSTOM RAG INGESTION & TRAINING PANEL -->
+          <div class="chart-panel">
+            <div class="chart-header">
+              <div>
+                <h2 class="chart-title">Custom RAG Ingestion &amp; Flash 3-8 Fast Lite Adapter Training</h2>
+                <p class="chart-subtitle">Ingest new runbooks, architecture docs, or CSV datasets directly into the vector index and re-calibrate the lightweight RAG adapter.</p>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
+              <input type="text" id="ingest-doc-title" class="input-control" placeholder="Document Title (e.g., Q4 Cloud FinOps Runbook)" />
+              <select id="ingest-doc-connection" class="select-control" aria-label="Source Service Connection">
+                <option value="conn-gemini-flash-lite">Google Flash 3-8 Fast Lite Gateway</option>
+                <option value="conn-github-ent">GitHub Enterprise Cloud</option>
+                <option value="conn-workday">Workday HRM &amp; Payroll</option>
+                <option value="conn-servicenow">ServiceNow ITSM</option>
+                <option value="conn-jira">Atlassian Jira Software</option>
+                <option value="conn-sap-erp">SAP S/4HANA FinOps</option>
+                <option value="conn-powerbi">Power BI &amp; CSV Ingestion</option>
+              </select>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
+              <select id="ingest-doc-department" class="select-control" aria-label="Department">
+                <option value="Data & AI Platform">Data &amp; AI Platform</option>
+                <option value="Platform & Technical Ops">Platform &amp; Technical Ops</option>
+                <option value="Core Product Engineering">Core Product Engineering</option>
+                <option value="Enterprise Systems & FinOps">Enterprise Systems &amp; FinOps</option>
+                <option value="Customer Operations & Support">Customer Operations &amp; Support</option>
+              </select>
+              <select id="ingest-chunk-strategy" class="select-control" aria-label="Chunking Strategy">
+                <option value="semantic">Semantic Paragraph Chunking</option>
+                <option value="fixed_window">Fixed 512-Token Window</option>
+                <option value="csv_rows">CSV Row-Record Chunking</option>
+              </select>
+            </div>
+
+            <textarea
+              id="ingest-doc-content"
+              class="textarea-control"
+              rows="3"
+              placeholder="Paste enterprise runbook markdown, telemetry notes, or CSV rows to index into Google Flash 3-8 Fast Lite RAG..."
+            ></textarea>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+              <span style="font-size:0.76rem;color:var(--text-muted);" id="rag-training-status-text">
+                Adapter: <code>burniq-flash-3-8-fast-lite-rag-v2.4</code> · Recall@5: <strong>94.6%</strong>
+              </span>
+              <button type="button" class="btn btn-emerald" id="btn-ingest-rag-doc">Ingest &amp; Index into RAG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: GOOGLE FLASH 3-8 FAST LITE RAG ASSISTANT -->
+        <div class="studio-column">
+          <div class="chart-panel">
+            <div class="chart-header">
+              <div>
+                <h2 class="chart-title">Customized RAG-Trained LLM Assistant (Google Flash 3-8 Fast Lite)</h2>
+                <p class="chart-subtitle">Grounded synthesis with inline <code>[DOC-xxx]</code> citations, live SQLite telemetry, and 96.8% lower token cost than heavyweight frontier models.</p>
+              </div>
+              <span class="nav-badge" id="llm-active-tier-badge">$0.035 / 1M Tokens</span>
+            </div>
+
+            <!-- Model & Persona Selectors -->
+            <div style="display:grid;grid-template-columns:1.3fr 1fr 0.7fr;gap:0.6rem;">
+              <select id="llm-model-select" class="select-control" aria-label="Select LLM Model">
+                <option value="google/gemini-3-8-flash-lite" selected>Google Flash 3-8 Fast Lite (RAG-Tuned · $0.035/1M)</option>
+                <option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash ($0.15/1M)</option>
+                <option value="google/gemini-2.5-pro">Google Gemini 2.5 Pro ($1.25/1M)</option>
+                <option value="anthropic/claude-3.5-haiku">Anthropic Claude 3.5 Haiku ($0.80/1M)</option>
+                <option value="anthropic/claude-3.7-sonnet">Anthropic Claude 3.7 Sonnet ($3.00/1M)</option>
+              </select>
+
+              <select id="llm-persona-select" class="select-control" aria-label="Select Target Persona Lens">
+                <option value="csuite" selected>Lens: C-Suite Executive (ROI &amp; FinOps)</option>
+                <option value="techops">Lens: Technical Ops &amp; SRE</option>
+                <option value="developers">Lens: Developers &amp; Architects</option>
+                <option value="managers">Lens: Engineering Managers</option>
+              </select>
+
+              <select id="llm-topk-select" class="select-control" aria-label="Top-K RAG Chunks">
+                <option value="3">Top-3 Chunks</option>
+                <option value="5" selected>Top-5 Chunks</option>
+                <option value="8">Top-8 Chunks</option>
+              </select>
+            </div>
+
+            <!-- Preset Domain Prompt Chips -->
+            <div class="prompt-chips-row">
+              <button type="button" class="prompt-chip" data-prompt="Summarize our Net Enterprise ROI comparing Workday payroll value against SAP AI spend and Google Flash 3-8 Fast Lite savings.">
+                C-Suite: Workday ROI &amp; Flash-Lite Savings
+              </button>
+              <button type="button" class="prompt-chip" data-prompt="Analyze low-value email and meeting note LLM waste across departments and how routing to Google Flash 3-8 Fast Lite cuts spend.">
+                Managers: Low-Value Email/Notes Audit
+              </button>
+              <button type="button" class="prompt-chip" data-prompt="Trace our code-to-release attribution across GitHub, GitLab, Bitbucket commits, Jenkins/Bamboo CI builds, and Jira story points.">
+                Developers: Code-to-Release Lineage
+              </button>
+              <button type="button" class="prompt-chip" data-prompt="Show Technical Ops health across active service connections, P95 latency for Flash 3-8 Fast Lite, and ServiceNow P1 MTTR.">
+                TechOps: Connector Health &amp; P1 MTTR
+              </button>
+            </div>
+
+            <!-- Prompt Input Row -->
+            <div class="search-box-row">
+              <input
+                type="text"
+                id="llm-prompt-input"
+                class="input-control"
+                placeholder="Ask Google Flash 3-8 Fast Lite about any service connection, Workday ROI, commit lineage, or RAG doc..."
+                value="Summarize our Net Enterprise ROI comparing Workday payroll value against SAP AI spend and Google Flash 3-8 Fast Lite savings."
+              />
+              <button type="button" class="btn btn-emerald" id="btn-ask-flash-lite">Ask Flash-Lite</button>
+            </div>
+
+            <!-- Live LLM Response Box -->
+            <div class="llm-chat-response-box" id="llm-response-container">
+              <!-- Populated dynamically -->
+            </div>
+
+            <!-- Inference FinOps & Latency Telemetry Bar -->
+            <div class="llm-telemetry-bar" id="llm-telemetry-bar">
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">Model &amp; Adapter</span>
+                <span class="conn-metric-val" id="tel-model-name">Flash 3-8 Lite</span>
+              </div>
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">Total Latency</span>
+                <span class="conn-metric-val" id="tel-latency">98 ms</span>
+              </div>
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">Tokens (In/RAG/Out)</span>
+                <span class="conn-metric-val" id="tel-tokens">84 / 720 / 310</span>
+              </div>
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">Inference Cost</span>
+                <span class="conn-metric-val" id="tel-cost" style="color:var(--accent-emerald);">$0.000052</span>
+              </div>
+              <div class="conn-metric-item">
+                <span class="conn-metric-label">vs Frontier Model</span>
+                <span class="conn-metric-val" id="tel-savings" style="color:var(--accent-amber);">97.4% Saved</span>
+              </div>
+            </div>
+
+            <!-- Retrieved Citations List -->
+            <div style="margin-top:0.5rem;">
+              <h3 style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:0.45rem;">
+                Retrieved RAG Context Chunks (Active Service Connections)
+              </h3>
+              <div id="llm-citations-container" style="display:flex;flex-direction:column;gap:0.45rem;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="/js/charts.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
